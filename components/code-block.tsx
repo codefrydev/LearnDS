@@ -34,16 +34,23 @@ function highlightCode(code: string): React.ReactNode[] {
     const parts: React.ReactNode[] = []
     let remaining = line
 
-    // Simple syntax highlighting patterns
+    // Simple syntax highlighting patterns (JavaScript, C#, Python, Go)
     const patterns: [RegExp, string][] = [
-      // Comments (# or //)
+      // Comments
       [/(#.*|\/\/.*)$/, "text-code-comment"],
-      // Multi-word keywords
-      [/\b(public static void main|public class|static class|import java|from collections|using namespace|#include)\b/, "text-code-keyword"],
-      // Keywords
-      [/\b(def|class|return|if|else|elif|while|for|in|not|and|or|None|True|False|self|import|from|print|raise|del|lambda|with|as|try|except|finally|yield|break|continue|pass|global|nonlocal|assert)\b/, "text-code-keyword"],
-      [/\b(public|private|protected|static|void|int|String|boolean|new|null|this|super|final|abstract|interface|extends|implements|throws|throw|try|catch|finally|package|import|class|return|if|else|while|for|switch|case|break|continue|default|var|System)\b/, "text-code-keyword"],
-      [/\b(int|void|bool|char|string|auto|const|struct|class|public|private|protected|virtual|override|return|if|else|while|for|using|namespace|include|new|delete|nullptr|cout|cin|endl|template|typename)\b/, "text-code-keyword"],
+      [/(\/\*[\s\S]*?\*\/)/, "text-code-comment"],
+      // Multi-word / language-specific
+      [/\b(public static void|static class|from collections|using System|func main|package main)\b/, "text-code-keyword"],
+      // Python
+      [/\b(def|elif|lambda|None|True|False|self|raise|yield|pass|global|nonlocal|assert)\b/, "text-code-keyword"],
+      // JavaScript
+      [/\b(const|let|var|function|=>|async|await|export|import|default|typeof|instanceof)\b/, "text-code-keyword"],
+      // C#
+      [/\b(public|private|protected|static|void|int|string|bool|new|null|this|base|readonly|override|class|interface|namespace|using|return|if|else|for|foreach|while|switch|case|break|continue|try|catch|finally|throw|var)\b/, "text-code-keyword"],
+      // Go
+      [/\b(func|var|const|type|struct|interface|range|defer|go|select|chan|map|make|len|cap|nil|true|false)\b/, "text-code-keyword"],
+      // Common keywords
+      [/\b(return|if|else|while|for|in|class|import|from|try|except|finally)\b/, "text-code-keyword"],
       // Strings
       [/("[^"]*"|'[^']*'|`[^`]*`)/, "text-code-string"],
       // Function calls

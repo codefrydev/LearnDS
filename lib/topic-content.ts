@@ -50,6 +50,63 @@ const topicContentMap: Record<string, TopicContent> = {
     spaceComplexity: "O(n)",
     codeExamples: [
       {
+        language: "javascript",
+        label: "JavaScript",
+        code: `// Array operations in JavaScript
+
+// Initialize
+const arr = [10, 20, 30, 40, 50];
+
+// Access by index — O(1)
+console.log(arr[2]);  // 30
+
+// Search — O(n)
+const index = arr.indexOf(40);  // 3
+
+// Insert at position — O(n)
+arr.splice(2, 0, 25);  // [10, 20, 25, 30, 40, 50]
+
+// Append to end — Amortized O(1)
+arr.push(60);
+
+// Delete by value — O(n)
+arr.splice(arr.indexOf(25), 1);
+
+// Slice — O(k)
+const sub = arr.slice(1, 4);  // [20, 30, 40]
+
+console.log(arr);`,
+      },
+      {
+        language: "csharp",
+        label: "C#",
+        code: `using System;
+using System.Collections.Generic;
+
+// Array / List operations in C#
+var list = new List<int> { 10, 20, 30, 40, 50 };
+
+// Access by index — O(1)
+Console.WriteLine(list[2]);  // 30
+
+// Search — O(n)
+int idx = list.IndexOf(40);  // 3
+
+// Insert at position — O(n)
+list.Insert(2, 25);
+
+// Append to end — Amortized O(1)
+list.Add(60);
+
+// Delete by value — O(n)
+list.Remove(25);
+
+// Slice — O(k)
+var sub = list.GetRange(1, 3);
+
+Console.WriteLine(string.Join(", ", list));`,
+      },
+      {
         language: "python",
         label: "Python",
         code: `# Array (List) Operations in Python
@@ -78,65 +135,40 @@ sub = arr[1:4]         # [20, 30, 40]
 print(arr)`,
       },
       {
-        language: "java",
-        label: "Java",
-        code: `import java.util.ArrayList;
-import java.util.Arrays;
+        language: "go",
+        label: "Go",
+        code: `package main
 
-public class ArrayExample {
-    public static void main(String[] args) {
-        // Static array
-        int[] arr = {10, 20, 30, 40, 50};
+import "fmt"
 
-        // Access by index — O(1)
-        System.out.println(arr[2]); // 30
-
-        // Dynamic array (ArrayList)
-        ArrayList<Integer> list = new ArrayList<>(
-            Arrays.asList(10, 20, 30, 40, 50)
-        );
-
-        // Insert at position — O(n)
-        list.add(2, 25);
-
-        // Append to end — Amortized O(1)
-        list.add(60);
-
-        // Delete by index — O(n)
-        list.remove(2);
-
-        System.out.println(list);
-    }
-}`,
-      },
-      {
-        language: "cpp",
-        label: "C++",
-        code: `#include <iostream>
-#include <vector>
-using namespace std;
-
-int main() {
-    // Dynamic array using vector
-    vector<int> arr = {10, 20, 30, 40, 50};
+// Slice operations in Go
+func main() {
+    arr := []int{10, 20, 30, 40, 50}
 
     // Access by index — O(1)
-    cout << arr[2] << endl;  // 30
+    fmt.Println(arr[2])  // 30
+
+    // Search — O(n)
+    idx := -1
+    for i, v := range arr {
+        if v == 40 { idx = i; break }
+    }
 
     // Insert at position — O(n)
-    arr.insert(arr.begin() + 2, 25);
+    arr = append(arr[:2], append([]int{25}, arr[2:]...)...)
 
     // Append to end — Amortized O(1)
-    arr.push_back(60);
+    arr = append(arr, 60)
 
-    // Delete by iterator — O(n)
-    arr.erase(arr.begin() + 2);
+    // Delete by value — O(n)
+    for i, v := range arr {
+        if v == 25 {
+            arr = append(arr[:i], arr[i+1:]...)
+            break
+        }
+    }
 
-    // Print
-    for (int x : arr) cout << x << " ";
-    cout << endl;
-
-    return 0;
+    fmt.Println(arr)
 }`,
       },
     ],
@@ -171,6 +203,84 @@ int main() {
     ],
     spaceComplexity: "O(n)",
     codeExamples: [
+      {
+        language: "javascript",
+        label: "JavaScript",
+        code: `class Node {
+  constructor(data) {
+    this.data = data;
+    this.next = null;
+  }
+}
+
+class LinkedList {
+  constructor() { this.head = null; }
+
+  append(data) {
+    const node = new Node(data);
+    if (!this.head) { this.head = node; return; }
+    let curr = this.head;
+    while (curr.next) curr = curr.next;
+    curr.next = node;
+  }
+
+  prepend(data) {
+    const node = new Node(data);
+    node.next = this.head;
+    this.head = node;
+  }
+
+  delete(data) {
+    if (!this.head) return;
+    if (this.head.data === data) {
+      this.head = this.head.next;
+      return;
+    }
+    let curr = this.head;
+    while (curr.next && curr.next.data !== data) curr = curr.next;
+    if (curr.next) curr.next = curr.next.next;
+  }
+}
+
+const ll = new LinkedList();
+ll.append(1); ll.append(2); ll.append(3);
+ll.prepend(0);
+console.log(ll);  // 0 -> 1 -> 2 -> 3`,
+      },
+      {
+        language: "csharp",
+        label: "C#",
+        code: `public class Node {
+  public int Data { get; set; }
+  public Node Next { get; set; }
+  public Node(int data) { Data = data; }
+}
+
+public class LinkedList {
+  private Node head;
+
+  public void Append(int data) {
+    var node = new Node(data);
+    if (head == null) { head = node; return; }
+    var curr = head;
+    while (curr.Next != null) curr = curr.Next;
+    curr.Next = node;
+  }
+
+  public void Prepend(int data) {
+    var node = new Node(data) { Next = head };
+    head = node;
+  }
+
+  public void Delete(int data) {
+    if (head == null) return;
+    if (head.Data == data) { head = head.Next; return; }
+    var curr = head;
+    while (curr.Next != null && curr.Next.Data != data) curr = curr.Next;
+    if (curr.Next != null) curr.Next = curr.Next.Next;
+  }
+}`,
+      },
       {
         language: "python",
         label: "Python",
@@ -226,118 +336,44 @@ ll.prepend(0)
 ll.display()  # 0 -> 1 -> 2 -> 3`,
       },
       {
-        language: "java",
-        label: "Java",
-        code: `public class LinkedList {
-    static class Node {
-        int data;
-        Node next;
-        Node(int data) {
-            this.data = data;
-            this.next = null;
-        }
+        language: "go",
+        label: "Go",
+        code: `package main
+
+type Node struct {
+    data int
+    next *Node
+}
+
+type LinkedList struct {
+    head *Node
+}
+
+func (l *LinkedList) Append(data int) {
+    node := &Node{data: data}
+    if l.head == nil { l.head = node; return }
+    curr := l.head
+    for curr.next != nil { curr = curr.next }
+    curr.next = node
+}
+
+func (l *LinkedList) Prepend(data int) {
+    node := &Node{data: data, next: l.head}
+    l.head = node
+}
+
+func (l *LinkedList) Delete(data int) {
+    if l.head == nil { return }
+    if l.head.data == data {
+        l.head = l.head.next
+        return
     }
-
-    Node head;
-
-    void append(int data) {
-        Node newNode = new Node(data);
-        if (head == null) {
-            head = newNode;
-            return;
-        }
-        Node curr = head;
-        while (curr.next != null)
-            curr = curr.next;
-        curr.next = newNode;
-    }
-
-    void prepend(int data) {
-        Node newNode = new Node(data);
-        newNode.next = head;
-        head = newNode;
-    }
-
-    void delete(int data) {
-        if (head == null) return;
-        if (head.data == data) {
-            head = head.next;
-            return;
-        }
-        Node curr = head;
-        while (curr.next != null
-               && curr.next.data != data)
-            curr = curr.next;
-        if (curr.next != null)
-            curr.next = curr.next.next;
-    }
-
-    void display() {
-        Node curr = head;
-        while (curr != null) {
-            System.out.print(curr.data + " -> ");
-            curr = curr.next;
-        }
-        System.out.println("null");
+    curr := l.head
+    for curr.next != nil && curr.next.data != data { curr = curr.next }
+    if curr.next != nil {
+        curr.next = curr.next.next
     }
 }`,
-      },
-      {
-        language: "cpp",
-        label: "C++",
-        code: `#include <iostream>
-using namespace std;
-
-struct Node {
-    int data;
-    Node* next;
-    Node(int d) : data(d), next(nullptr) {}
-};
-
-class LinkedList {
-    Node* head = nullptr;
-public:
-    void append(int data) {
-        Node* node = new Node(data);
-        if (!head) { head = node; return; }
-        Node* curr = head;
-        while (curr->next) curr = curr->next;
-        curr->next = node;
-    }
-
-    void prepend(int data) {
-        Node* node = new Node(data);
-        node->next = head;
-        head = node;
-    }
-
-    void remove(int data) {
-        if (!head) return;
-        if (head->data == data) {
-            Node* tmp = head;
-            head = head->next;
-            delete tmp;
-            return;
-        }
-        Node* curr = head;
-        while (curr->next && curr->next->data != data)
-            curr = curr->next;
-        if (curr->next) {
-            Node* tmp = curr->next;
-            curr->next = curr->next->next;
-            delete tmp;
-        }
-    }
-
-    void display() {
-        Node* curr = head;
-        while (curr) {
-            cout << curr->data << " -> ";
-            curr = curr->next;
-        }
-        cout << "null" << endl;
-    }
-};`,
       },
     ],
     problems: [
@@ -368,6 +404,47 @@ public:
     ],
     spaceComplexity: "O(n)",
     codeExamples: [
+      {
+        language: "javascript",
+        label: "JavaScript",
+        code: `// Stack using array
+const stack = [];
+
+// Push — O(1)
+stack.push(10);
+stack.push(20);
+stack.push(30);
+
+// Peek — O(1)
+console.log(stack[stack.length - 1]);  // 30
+
+// Pop — O(1)
+console.log(stack.pop());  // 30
+
+// Size
+console.log(stack.length);  // 2`,
+      },
+      {
+        language: "csharp",
+        label: "C#",
+        code: `using System.Collections.Generic;
+
+var stack = new Stack<int>();
+
+// Push — O(1)
+stack.Push(10);
+stack.Push(20);
+stack.Push(30);
+
+// Peek — O(1)
+Console.WriteLine(stack.Peek());  // 30
+
+// Pop — O(1)
+Console.WriteLine(stack.Pop());   // 30
+
+// Count
+Console.WriteLine(stack.Count);   // 2`,
+      },
       {
         language: "python",
         label: "Python",
@@ -404,63 +481,27 @@ print(stack.pop())   # 30
 print(stack.size())  # 2`,
       },
       {
-        language: "java",
-        label: "Java",
-        code: `import java.util.ArrayDeque;
-import java.util.Deque;
+        language: "go",
+        label: "Go",
+        code: `package main
 
-public class StackExample {
-    public static void main(String[] args) {
-        Deque<Integer> stack = new ArrayDeque<>();
+import "fmt"
 
-        // Push — O(1)
-        stack.push(10);
-        stack.push(20);
-        stack.push(30);
-
-        // Peek — O(1)
-        System.out.println(stack.peek()); // 30
-
-        // Pop — O(1)
-        System.out.println(stack.pop());  // 30
-
-        // Size
-        System.out.println(stack.size()); // 2
-
-        // Check empty
-        System.out.println(stack.isEmpty());
-    }
-}`,
-      },
-      {
-        language: "cpp",
-        label: "C++",
-        code: `#include <iostream>
-#include <stack>
-using namespace std;
-
-int main() {
-    stack<int> s;
+func main() {
+    var stack []int
 
     // Push — O(1)
-    s.push(10);
-    s.push(20);
-    s.push(30);
+    stack = append(stack, 10, 20, 30)
 
-    // Top (peek) — O(1)
-    cout << s.top() << endl;  // 30
+    // Peek — O(1)
+    fmt.Println(stack[len(stack)-1])  // 30
 
     // Pop — O(1)
-    s.pop();
-    cout << s.top() << endl;  // 20
+    top := stack[len(stack)-1]
+    stack = stack[:len(stack)-1]
+    fmt.Println(top)  // 30
 
-    // Size
-    cout << s.size() << endl; // 2
-
-    // Check empty
-    cout << boolalpha << s.empty() << endl;
-
-    return 0;
+    fmt.Println(len(stack))  // 2
 }`,
       },
     ],
@@ -491,6 +532,46 @@ int main() {
     ],
     spaceComplexity: "O(n)",
     codeExamples: [
+      {
+        language: "javascript",
+        label: "JavaScript",
+        code: `// Queue using array (shift for dequeue)
+const queue = [];
+
+// Enqueue — O(1)
+queue.push("A");
+queue.push("B");
+queue.push("C");
+
+// Front — O(1)
+console.log(queue[0]);  // A
+
+// Dequeue — O(1)
+console.log(queue.shift());  // A
+
+// Size
+console.log(queue.length);  // 2`,
+      },
+      {
+        language: "csharp",
+        label: "C#",
+        code: `using System.Collections.Generic;
+
+var queue = new Queue<string>();
+
+// Enqueue — O(1)
+queue.Enqueue("A");
+queue.Enqueue("B");
+queue.Enqueue("C");
+
+// Peek (front) — O(1)
+Console.WriteLine(queue.Peek());  // A
+
+// Dequeue — O(1)
+Console.WriteLine(queue.Dequeue());  // A
+
+Console.WriteLine(queue.Count);  // 2`,
+      },
       {
         language: "python",
         label: "Python",
@@ -529,57 +610,27 @@ print(q.dequeue())  # A
 print(q.size())     # 2`,
       },
       {
-        language: "java",
-        label: "Java",
-        code: `import java.util.LinkedList;
-import java.util.Queue;
+        language: "go",
+        label: "Go",
+        code: `package main
 
-public class QueueExample {
-    public static void main(String[] args) {
-        Queue<String> queue = new LinkedList<>();
+import "fmt"
 
-        // Enqueue — O(1)
-        queue.add("A");
-        queue.add("B");
-        queue.add("C");
-
-        // Peek (front) — O(1)
-        System.out.println(queue.peek()); // A
-
-        // Dequeue — O(1)
-        System.out.println(queue.poll()); // A
-
-        // Size
-        System.out.println(queue.size()); // 2
-    }
-}`,
-      },
-      {
-        language: "cpp",
-        label: "C++",
-        code: `#include <iostream>
-#include <queue>
-using namespace std;
-
-int main() {
-    queue<string> q;
+func main() {
+    var queue []string
 
     // Enqueue — O(1)
-    q.push("A");
-    q.push("B");
-    q.push("C");
+    queue = append(queue, "A", "B", "C")
 
     // Front — O(1)
-    cout << q.front() << endl; // A
+    fmt.Println(queue[0])  // A
 
     // Dequeue — O(1)
-    q.pop();
-    cout << q.front() << endl; // B
+    front := queue[0]
+    queue = queue[1:]
+    fmt.Println(front)  // A
 
-    // Size
-    cout << q.size() << endl;  // 2
-
-    return 0;
+    fmt.Println(len(queue))  // 2
 }`,
       },
     ],
@@ -610,6 +661,61 @@ int main() {
     ],
     spaceComplexity: "O(n)",
     codeExamples: [
+      {
+        language: "javascript",
+        label: "JavaScript",
+        code: `// Hash table using Map (or plain object)
+const phoneBook = new Map();
+
+// Insert — O(1) average
+phoneBook.set("Alice", "555-0101");
+phoneBook.set("Bob", "555-0102");
+phoneBook.set("Carol", "555-0103");
+
+// Lookup — O(1) average
+console.log(phoneBook.get("Alice"));  // 555-0101
+
+// Check existence — O(1) average
+if (phoneBook.has("Bob")) console.log("Found Bob");
+
+// Delete — O(1) average
+phoneBook.delete("Carol");
+
+// Iterate
+for (const [name, number] of phoneBook) {
+  console.log(name + ": " + number);
+}
+
+console.log(phoneBook.get("Dave") ?? "Not found");`,
+      },
+      {
+        language: "csharp",
+        label: "C#",
+        code: `using System.Collections.Generic;
+
+var phoneBook = new Dictionary<string, string>();
+
+// Insert — O(1) average
+phoneBook["Alice"] = "555-0101";
+phoneBook["Bob"]   = "555-0102";
+phoneBook["Carol"] = "555-0103";
+
+// Lookup — O(1) average
+Console.WriteLine(phoneBook["Alice"]);
+
+// Check existence — O(1) average
+if (phoneBook.ContainsKey("Bob"))
+  Console.WriteLine("Found Bob");
+
+// Delete — O(1) average
+phoneBook.Remove("Carol");
+
+// Iterate
+foreach (var kv in phoneBook)
+  Console.WriteLine($"{kv.Key}: {kv.Value}");
+
+Console.WriteLine(phoneBook.GetValueOrDefault("Dave", "Not found"));`,
+      },
       {
         language: "python",
         label: "Python",
@@ -642,76 +748,34 @@ val = phone_book.get("Dave", "Not found")
 print(val)  # Not found`,
       },
       {
-        language: "java",
-        label: "Java",
-        code: `import java.util.HashMap;
-import java.util.Map;
+        language: "go",
+        label: "Go",
+        code: `package main
 
-public class HashTableExample {
-    public static void main(String[] args) {
-        Map<String, String> phoneBook =
-            new HashMap<>();
+import "fmt"
 
-        // Insert — O(1) average
-        phoneBook.put("Alice", "555-0101");
-        phoneBook.put("Bob",   "555-0102");
-        phoneBook.put("Carol", "555-0103");
-
-        // Lookup — O(1) average
-        System.out.println(
-            phoneBook.get("Alice")
-        );
-
-        // Check existence — O(1) average
-        if (phoneBook.containsKey("Bob")) {
-            System.out.println("Found Bob");
-        }
-
-        // Delete — O(1) average
-        phoneBook.remove("Carol");
-
-        // Iterate
-        for (var entry : phoneBook.entrySet()) {
-            System.out.println(
-                entry.getKey() + ": "
-                + entry.getValue()
-            );
-        }
-    }
-}`,
-      },
-      {
-        language: "cpp",
-        label: "C++",
-        code: `#include <iostream>
-#include <unordered_map>
-using namespace std;
-
-int main() {
-    unordered_map<string, string> phoneBook;
+func main() {
+    phoneBook := make(map[string]string)
 
     // Insert — O(1) average
-    phoneBook["Alice"] = "555-0101";
-    phoneBook["Bob"]   = "555-0102";
-    phoneBook["Carol"] = "555-0103";
+    phoneBook["Alice"] = "555-0101"
+    phoneBook["Bob"]   = "555-0102"
+    phoneBook["Carol"] = "555-0103"
 
     // Lookup — O(1) average
-    cout << phoneBook["Alice"] << endl;
+    fmt.Println(phoneBook["Alice"])
 
     // Check existence — O(1) average
-    if (phoneBook.count("Bob")) {
-        cout << "Found Bob" << endl;
+    if _, ok := phoneBook["Bob"]; ok {
+        fmt.Println("Found Bob")
     }
 
     // Delete — O(1) average
-    phoneBook.erase("Carol");
+    delete(phoneBook, "Carol")
 
-    // Iterate
-    for (auto& [name, num] : phoneBook) {
-        cout << name << ": " << num << endl;
+    for name, number := range phoneBook {
+        fmt.Println(name + ": " + number)
     }
-
-    return 0;
 }`,
       },
     ],
@@ -742,6 +806,89 @@ int main() {
     ],
     spaceComplexity: "O(n)",
     codeExamples: [
+      {
+        language: "javascript",
+        label: "JavaScript",
+        code: `class TreeNode {
+  constructor(val) {
+    this.val = val;
+    this.left = this.right = null;
+  }
+}
+
+class BST {
+  constructor() { this.root = null; }
+
+  insert(val) {
+    this.root = this._insert(this.root, val);
+  }
+
+  _insert(node, val) {
+    if (!node) return new TreeNode(val);
+    if (val < node.val) node.left = this._insert(node.left, val);
+    else if (val > node.val) node.right = this._insert(node.right, val);
+    return node;
+  }
+
+  search(val) {
+    let node = this.root;
+    while (node && node.val !== val)
+      node = val < node.val ? node.left : node.right;
+    return node;
+  }
+
+  inorder(node = this.root) {
+    if (!node) return;
+    this.inorder(node.left);
+    console.log(node.val);
+    this.inorder(node.right);
+  }
+}
+
+const bst = new BST();
+[8, 3, 10, 1, 6, 14, 4, 7].forEach(v => bst.insert(v));
+bst.inorder();  // 1 3 4 6 7 8 10 14`,
+      },
+      {
+        language: "csharp",
+        label: "C#",
+        code: `public class TreeNode {
+  public int Val { get; set; }
+  public TreeNode Left { get; set; }
+  public TreeNode Right { get; set; }
+  public TreeNode(int val) { Val = val; }
+}
+
+public class BST {
+  private TreeNode root;
+
+  public void Insert(int val) {
+    root = Insert(root, val);
+  }
+
+  private TreeNode Insert(TreeNode node, int val) {
+    if (node == null) return new TreeNode(val);
+    if (val < node.Val) node.Left = Insert(node.Left, val);
+    else if (val > node.Val) node.Right = Insert(node.Right, val);
+    return node;
+  }
+
+  public TreeNode Search(int val) {
+    var node = root;
+    while (node != null && node.Val != val)
+      node = val < node.Val ? node.Left : node.Right;
+    return node;
+  }
+
+  public void Inorder(TreeNode node = null) {
+    node ??= root;
+    if (node == null) return;
+    Inorder(node.Left);
+    Console.Write(node.Val + " ");
+    Inorder(node.Right);
+  }
+}`,
+      },
       {
         language: "python",
         label: "Python",
@@ -792,109 +939,51 @@ for v in [8, 3, 10, 1, 6, 14, 4, 7]:
 bst.inorder()  # 1 3 4 6 7 8 10 14`,
       },
       {
-        language: "java",
-        label: "Java",
-        code: `public class BST {
-    static class Node {
-        int val;
-        Node left, right;
-        Node(int val) { this.val = val; }
+        language: "go",
+        label: "Go",
+        code: `package main
+
+import "fmt"
+
+type TreeNode struct {
+    val   int
+    left  *TreeNode
+    right *TreeNode
+}
+
+type BST struct {
+    root *TreeNode
+}
+
+func (b *BST) Insert(val int) {
+    b.root = b.insert(b.root, val)
+}
+
+func (b *BST) insert(node *TreeNode, val int) *TreeNode {
+    if node == nil {
+        return &TreeNode{val: val}
     }
-
-    Node root;
-
-    void insert(int val) {
-        root = insert(root, val);
+    if val < node.val {
+        node.left = b.insert(node.left, val)
+    } else if val > node.val {
+        node.right = b.insert(node.right, val)
     }
+    return node
+}
 
-    Node insert(Node node, int val) {
-        if (node == null) return new Node(val);
-        if (val < node.val)
-            node.left = insert(node.left, val);
-        else if (val > node.val)
-            node.right = insert(node.right, val);
-        return node;
+func (b *BST) Inorder(node *TreeNode) {
+    if node == nil { return }
+    b.Inorder(node.left)
+    fmt.Print(node.val, " ")
+    b.Inorder(node.right)
+}
+
+func main() {
+    var bst BST
+    for _, v := range []int{8, 3, 10, 1, 6, 14, 4, 7} {
+        bst.Insert(v)
     }
-
-    Node search(Node node, int val) {
-        if (node == null || node.val == val)
-            return node;
-        if (val < node.val)
-            return search(node.left, val);
-        return search(node.right, val);
-    }
-
-    void inorder(Node node) {
-        if (node != null) {
-            inorder(node.left);
-            System.out.print(node.val + " ");
-            inorder(node.right);
-        }
-    }
-
-    public static void main(String[] args) {
-        BST bst = new BST();
-        int[] vals = {8, 3, 10, 1, 6, 14, 4, 7};
-        for (int v : vals) bst.insert(v);
-        bst.inorder(bst.root);
-        // 1 3 4 6 7 8 10 14
-    }
-}`,
-      },
-      {
-        language: "cpp",
-        label: "C++",
-        code: `#include <iostream>
-using namespace std;
-
-struct Node {
-    int val;
-    Node *left, *right;
-    Node(int v) : val(v), left(nullptr),
-                  right(nullptr) {}
-};
-
-class BST {
-    Node* root = nullptr;
-
-    Node* insert(Node* node, int val) {
-        if (!node) return new Node(val);
-        if (val < node->val)
-            node->left = insert(node->left, val);
-        else if (val > node->val)
-            node->right = insert(node->right, val);
-        return node;
-    }
-
-    Node* search(Node* node, int val) {
-        if (!node || node->val == val)
-            return node;
-        if (val < node->val)
-            return search(node->left, val);
-        return search(node->right, val);
-    }
-
-    void inorder(Node* node) {
-        if (node) {
-            inorder(node->left);
-            cout << node->val << " ";
-            inorder(node->right);
-        }
-    }
-
-public:
-    void insert(int val) {
-        root = insert(root, val);
-    }
-    void print() { inorder(root); }
-};
-
-int main() {
-    BST bst;
-    for (int v : {8,3,10,1,6,14,4,7})
-        bst.insert(v);
-    bst.print();
-    // 1 3 4 6 7 8 10 14
+    bst.Inorder(bst.root)
 }`,
       },
     ],
@@ -926,6 +1015,80 @@ int main() {
     ],
     spaceComplexity: "O(V + E)",
     codeExamples: [
+      {
+        language: "javascript",
+        label: "JavaScript",
+        code: `class Graph {
+  constructor() {
+    this.adj = new Map();
+  }
+
+  addEdge(u, v) {
+    if (!this.adj.has(u)) this.adj.set(u, []);
+    if (!this.adj.has(v)) this.adj.set(v, []);
+    this.adj.get(u).push(v);
+    this.adj.get(v).push(u);
+  }
+
+  bfs(start) {
+    const visited = new Set([start]);
+    const queue = [start];
+    const order = [];
+    while (queue.length) {
+      const node = queue.shift();
+      order.push(node);
+      for (const nb of this.adj.get(node) ?? []) {
+        if (!visited.has(nb)) {
+          visited.add(nb);
+          queue.push(nb);
+        }
+      }
+    }
+    return order;
+  }
+}
+
+const g = new Graph();
+g.addEdge(0, 1); g.addEdge(0, 2);
+g.addEdge(1, 3); g.addEdge(2, 4);
+console.log(g.bfs(0));  // [0, 1, 2, 3, 4]`,
+      },
+      {
+        language: "csharp",
+        label: "C#",
+        code: `using System.Collections.Generic;
+
+var adj = new Dictionary<int, List<int>>();
+
+void AddEdge(int u, int v) {
+  if (!adj.ContainsKey(u)) adj[u] = new List<int>();
+  if (!adj.ContainsKey(v)) adj[v] = new List<int>();
+  adj[u].Add(v);
+  adj[v].Add(u);
+}
+
+List<int> Bfs(int start) {
+  var visited = new HashSet<int> { start };
+  var queue = new Queue<int>();
+  queue.Enqueue(start);
+  var order = new List<int>();
+  while (queue.Count > 0) {
+    int node = queue.Dequeue();
+    order.Add(node);
+    foreach (int nb in adj.GetValueOrDefault(node, new List<int>())) {
+      if (!visited.Contains(nb)) {
+        visited.Add(nb);
+        queue.Enqueue(nb);
+      }
+    }
+  }
+  return order;
+}
+
+AddEdge(0, 1); AddEdge(0, 2);
+AddEdge(1, 3); AddEdge(2, 4);
+// Bfs(0) => [0, 1, 2, 3, 4]`,
+      },
       {
         language: "python",
         label: "Python",
@@ -969,102 +1132,38 @@ g.add_edge(2, 4)
 print(g.bfs(0))  # [0, 1, 2, 3, 4]`,
       },
       {
-        language: "java",
-        label: "Java",
-        code: `import java.util.*;
+        language: "go",
+        label: "Go",
+        code: `package main
 
-public class Graph {
-    Map<Integer, List<Integer>> adj =
-        new HashMap<>();
+import "fmt"
 
-    void addEdge(int u, int v) {
-        adj.computeIfAbsent(u,
-            k -> new ArrayList<>()).add(v);
-        adj.computeIfAbsent(v,
-            k -> new ArrayList<>()).add(u);
-    }
-
-    List<Integer> bfs(int start) {
-        Set<Integer> visited = new HashSet<>();
-        Queue<Integer> queue = new LinkedList<>();
-        List<Integer> order = new ArrayList<>();
-
-        visited.add(start);
-        queue.add(start);
-
-        while (!queue.isEmpty()) {
-            int node = queue.poll();
-            order.add(node);
-            for (int nb : adj.getOrDefault(
-                    node, List.of())) {
-                if (!visited.contains(nb)) {
-                    visited.add(nb);
-                    queue.add(nb);
-                }
+func bfs(adj map[int][]int, start int) []int {
+    visited := map[int]bool{start: true}
+    queue := []int{start}
+    var order []int
+    for len(queue) > 0 {
+        node := queue[0]
+        queue = queue[1:]
+        order = append(order, node)
+        for _, nb := range adj[node] {
+            if !visited[nb] {
+                visited[nb] = true
+                queue = append(queue, nb)
             }
         }
-        return order;
     }
+    return order
+}
 
-    public static void main(String[] args) {
-        Graph g = new Graph();
-        g.addEdge(0, 1);
-        g.addEdge(0, 2);
-        g.addEdge(1, 3);
-        g.addEdge(2, 4);
-        System.out.println(g.bfs(0));
-    }
-}`,
-      },
-      {
-        language: "cpp",
-        label: "C++",
-        code: `#include <iostream>
-#include <vector>
-#include <queue>
-#include <unordered_set>
-#include <unordered_map>
-using namespace std;
-
-class Graph {
-    unordered_map<int, vector<int>> adj;
-public:
-    void addEdge(int u, int v) {
-        adj[u].push_back(v);
-        adj[v].push_back(u);
-    }
-
-    vector<int> bfs(int start) {
-        unordered_set<int> visited;
-        queue<int> q;
-        vector<int> order;
-
-        visited.insert(start);
-        q.push(start);
-
-        while (!q.empty()) {
-            int node = q.front(); q.pop();
-            order.push_back(node);
-            for (int nb : adj[node]) {
-                if (!visited.count(nb)) {
-                    visited.insert(nb);
-                    q.push(nb);
-                }
-            }
-        }
-        return order;
-    }
-};
-
-int main() {
-    Graph g;
-    g.addEdge(0, 1);
-    g.addEdge(0, 2);
-    g.addEdge(1, 3);
-    g.addEdge(2, 4);
-    for (int x : g.bfs(0))
-        cout << x << " ";
-    // 0 1 2 3 4
+func main() {
+    adj := make(map[int][]int)
+    adj[0] = []int{1, 2}
+    adj[1] = []int{0, 3}
+    adj[2] = []int{0, 4}
+    adj[3] = []int{1}
+    adj[4] = []int{2}
+    fmt.Println(bfs(adj, 0))  // [0 1 2 3 4]
 }`,
       },
     ],
@@ -1096,6 +1195,96 @@ int main() {
     ],
     spaceComplexity: "O(n * m)",
     codeExamples: [
+      {
+        language: "javascript",
+        label: "JavaScript",
+        code: `class TrieNode {
+  constructor() {
+    this.children = new Map();
+    this.isEnd = false;
+  }
+}
+
+class Trie {
+  constructor() { this.root = new TrieNode(); }
+
+  insert(word) {
+    let node = this.root;
+    for (const ch of word) {
+      if (!node.children.has(ch))
+        node.children.set(ch, new TrieNode());
+      node = node.children.get(ch);
+    }
+    node.isEnd = true;
+  }
+
+  search(word) {
+    const node = this._find(word);
+    return node != null && node.isEnd;
+  }
+
+  startsWith(prefix) {
+    return this._find(prefix) != null;
+  }
+
+  _find(prefix) {
+    let node = this.root;
+    for (const ch of prefix) {
+      if (!node.children.has(ch)) return null;
+      node = node.children.get(ch);
+    }
+    return node;
+  }
+}
+
+const trie = new Trie();
+trie.insert("apple");
+trie.insert("app");
+console.log(trie.search("app"));      // true
+console.log(trie.startsWith("ap"));  // true`,
+      },
+      {
+        language: "csharp",
+        label: "C#",
+        code: `using System.Collections.Generic;
+
+public class TrieNode {
+  public Dictionary<char, TrieNode> Children = new();
+  public bool IsEnd;
+}
+
+public class Trie {
+  private readonly TrieNode root = new();
+
+  public void Insert(string word) {
+    var node = root;
+    foreach (char c in word) {
+      if (!node.Children.ContainsKey(c))
+        node.Children[c] = new TrieNode();
+      node = node.Children[c];
+    }
+    node.IsEnd = true;
+  }
+
+  public bool Search(string word) {
+    var node = Find(word);
+    return node != null && node.IsEnd;
+  }
+
+  public bool StartsWith(string prefix) =>
+    Find(prefix) != null;
+
+  private TrieNode Find(string prefix) {
+    var node = root;
+    foreach (char c in prefix) {
+      if (!node.Children.TryGetValue(c, out var next))
+        return null;
+      node = next;
+    }
+    return node;
+  }
+}`,
+      },
       {
         language: "python",
         label: "Python",
@@ -1141,113 +1330,62 @@ print(trie.search("ap"))         # False
 print(trie.starts_with("ap"))    # True`,
       },
       {
-        language: "java",
-        label: "Java",
-        code: `public class Trie {
-    static class TrieNode {
-        TrieNode[] children = new TrieNode[26];
-        boolean isEnd = false;
-    }
+        language: "go",
+        label: "Go",
+        code: `package main
 
-    TrieNode root = new TrieNode();
+import "fmt"
 
-    void insert(String word) {
-        TrieNode node = root;
-        for (char c : word.toCharArray()) {
-            int i = c - 'a';
-            if (node.children[i] == null)
-                node.children[i] = new TrieNode();
-            node = node.children[i];
+type TrieNode struct {
+    children map[byte]*TrieNode
+    isEnd    bool
+}
+
+type Trie struct {
+    root *TrieNode
+}
+
+func NewTrie() *Trie {
+    return &Trie{root: &TrieNode{children: make(map[byte]*TrieNode)}}
+}
+
+func (t *Trie) Insert(word string) {
+    node := t.root
+    for i := 0; i < len(word); i++ {
+        c := word[i]
+        if node.children[c] == nil {
+            node.children[c] = &TrieNode{children: make(map[byte]*TrieNode)}
         }
-        node.isEnd = true;
+        node = node.children[c]
     }
+    node.isEnd = true
+}
 
-    boolean search(String word) {
-        TrieNode node = find(word);
-        return node != null && node.isEnd;
+func (t *Trie) Search(word string) bool {
+    node := t.find(word)
+    return node != nil && node.isEnd
+}
+
+func (t *Trie) StartsWith(prefix string) bool {
+    return t.find(prefix) != nil
+}
+
+func (t *Trie) find(prefix string) *TrieNode {
+    node := t.root
+    for i := 0; i < len(prefix); i++ {
+        c := prefix[i]
+        if node.children[c] == nil { return nil }
+        node = node.children[c]
     }
+    return node
+}
 
-    boolean startsWith(String prefix) {
-        return find(prefix) != null;
-    }
-
-    TrieNode find(String prefix) {
-        TrieNode node = root;
-        for (char c : prefix.toCharArray()) {
-            int i = c - 'a';
-            if (node.children[i] == null)
-                return null;
-            node = node.children[i];
-        }
-        return node;
-    }
-
-    public static void main(String[] args) {
-        Trie trie = new Trie();
-        trie.insert("apple");
-        trie.insert("app");
-        System.out.println(trie.search("app"));
-        System.out.println(
-            trie.startsWith("ap")
-        );
-    }
-}`,
-      },
-      {
-        language: "cpp",
-        label: "C++",
-        code: `#include <iostream>
-#include <unordered_map>
-using namespace std;
-
-struct TrieNode {
-    unordered_map<char, TrieNode*> children;
-    bool isEnd = false;
-};
-
-class Trie {
-    TrieNode* root = new TrieNode();
-
-public:
-    void insert(const string& word) {
-        TrieNode* node = root;
-        for (char c : word) {
-            if (!node->children.count(c))
-                node->children[c] =
-                    new TrieNode();
-            node = node->children[c];
-        }
-        node->isEnd = true;
-    }
-
-    bool search(const string& word) {
-        TrieNode* node = find(word);
-        return node && node->isEnd;
-    }
-
-    bool startsWith(const string& prefix) {
-        return find(prefix) != nullptr;
-    }
-
-private:
-    TrieNode* find(const string& prefix) {
-        TrieNode* node = root;
-        for (char c : prefix) {
-            if (!node->children.count(c))
-                return nullptr;
-            node = node->children[c];
-        }
-        return node;
-    }
-};
-
-int main() {
-    Trie trie;
-    trie.insert("apple");
-    trie.insert("app");
-    cout << boolalpha;
-    cout << trie.search("app") << endl;
-    cout << trie.startsWith("ap") << endl;
+func main() {
+    trie := NewTrie()
+    trie.Insert("apple")
+    trie.Insert("app")
+    fmt.Println(trie.Search("app"))
+    fmt.Println(trie.StartsWith("ap"))
 }`,
       },
     ],
