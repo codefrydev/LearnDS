@@ -1,7 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { ExternalLink } from "lucide-react"
+import Link from "next/link"
+import { ExternalLink, ArrowRight } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -21,7 +22,13 @@ const difficultyStyles: Record<string, string> = {
   Hard: "bg-rose-500/15 text-rose-400 border-rose-500/20",
 }
 
-export function PracticeProblems({ problems }: { problems: PracticeProblem[] }) {
+export function PracticeProblems({
+  problems,
+  practiceBasePath,
+}: {
+  problems: PracticeProblem[]
+  practiceBasePath?: string
+}) {
   const [completed, setCompleted] = useState<Set<string>>(new Set())
 
   const toggleProblem = (id: string) => {
@@ -86,17 +93,31 @@ export function PracticeProblems({ problems }: { problems: PracticeProblem[] }) 
                 </Badge>
               </TableCell>
               <TableCell className="text-right">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-7 gap-1 px-2 text-xs text-primary hover:text-primary/80"
-                  asChild
-                >
-                  <a href={problem.url} target="_blank" rel="noopener noreferrer">
-                    Solve
-                    <ExternalLink className="size-3" />
-                  </a>
-                </Button>
+                {practiceBasePath ? (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 gap-1 px-2 text-xs text-primary hover:text-primary/80"
+                    asChild
+                  >
+                    <Link href={`${practiceBasePath}/${problem.id}`}>
+                      Practice
+                      <ArrowRight className="size-3" />
+                    </Link>
+                  </Button>
+                ) : (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 gap-1 px-2 text-xs text-primary hover:text-primary/80"
+                    asChild
+                  >
+                    <a href={problem.url} target="_blank" rel="noopener noreferrer">
+                      Solve
+                      <ExternalLink className="size-3" />
+                    </a>
+                  </Button>
+                )}
               </TableCell>
             </TableRow>
           ))}

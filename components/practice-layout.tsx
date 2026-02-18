@@ -1,33 +1,31 @@
 "use client"
 
 import { useState, useCallback, useEffect } from "react"
-import { BookOpen, Code2, Eye, ListChecks, Lightbulb } from "lucide-react"
-import type { Topic } from "@/lib/topics"
-import type { TopicContent } from "@/lib/topic-content"
-import { ComplexityTable } from "@/components/complexity-table"
-import { CodeBlock } from "@/components/code-block"
-import { InteractiveVisualization } from "@/components/interactive-visualization"
-import { PracticeProblems } from "@/components/practice-problems"
+import Link from "next/link"
+import { BookOpen, Code2, Eye, ChevronRight, ExternalLink } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { ProblemCodeEditor } from "@/components/problem-code-editor"
+import { ProblemVisualization } from "@/components/problem-visualization"
+import type { ProblemWithTopic } from "@/lib/problems"
 
-// --- Section config (each tab = one section) ---
-export type SectionId = "theory" | "code" | "visualization" | "problems"
+// --- Section config (same pattern as topic-page-layout) ---
+export type PracticeSectionId = "description" | "code" | "visualization"
 
 const SECTION_CONFIG: Record<
-  SectionId,
+  PracticeSectionId,
   { label: string; icon: React.ElementType }
 > = {
-  theory: { label: "Theory", icon: BookOpen },
+  description: { label: "Description", icon: BookOpen },
   code: { label: "Code", icon: Code2 },
   visualization: { label: "Visualization", icon: Eye },
-  problems: { label: "Problems", icon: ListChecks },
 }
 
-// --- Layout tree types ---
+// --- Layout tree types (mirror topic-page-layout) ---
 export interface LayoutLeaf {
   type: "leaf"
   id: string
-  tabs: SectionId[]
-  activeTab: SectionId | null
+  tabs: PracticeSectionId[]
+  activeTab: PracticeSectionId | null
 }
 
 export interface LayoutSplit {
@@ -41,7 +39,7 @@ export interface LayoutSplit {
 
 export type LayoutNode = LayoutLeaf | LayoutSplit
 
-function createLeaf(tabs: SectionId[] = []): LayoutLeaf {
+function createLeaf(tabs: PracticeSectionId[] = []): LayoutLeaf {
   return {
     type: "leaf",
     id: `leaf-${Math.random().toString(36).slice(2, 9)}`,
@@ -66,7 +64,10 @@ function findNodeAndParent(
   return null
 }
 
-function findLeafWithTab(root: LayoutNode, tabId: SectionId): LayoutLeaf | null {
+function findLeafWithTab(
+  root: LayoutNode,
+  tabId: PracticeSectionId
+): LayoutLeaf | null {
   if (root.type === "leaf") {
     if (root.tabs.includes(tabId)) return root
     return null
@@ -78,7 +79,7 @@ function findLeafWithTab(root: LayoutNode, tabId: SectionId): LayoutLeaf | null 
 
 function removeTabFromTree(
   root: LayoutNode,
-  tabId: SectionId
+  tabId: PracticeSectionId
 ): { newRoot: LayoutNode; removed: boolean } {
   const newRoot = JSON.parse(JSON.stringify(root)) as LayoutNode
   const targetLeaf = findLeafWithTab(newRoot, tabId)
@@ -112,7 +113,7 @@ function removeTabFromTree(
 function insertTabIntoNode(
   root: LayoutNode,
   targetNodeId: string,
-  tabId: SectionId,
+  tabId: PracticeSectionId,
   position: "left" | "right" | "top" | "bottom" | "center"
 ): LayoutNode {
   let newRoot = JSON.parse(JSON.stringify(root)) as LayoutNode
@@ -159,116 +160,108 @@ function setSplitRatio(
   return next
 }
 
-// --- Initial layout: one row split, Theory+Code | Visualization+Problems ---
 function createInitialLayout(): LayoutSplit {
   return {
     type: "split",
     id: "root",
     direction: "row",
     ratio: 50,
-    first: createLeaf(["theory", "code"]),
-    second: createLeaf(["visualization", "problems"]),
+    first: createLeaf(["description", "code"]),
+    second: createLeaf(["visualization"]),
   }
 }
 
-// --- Section content renderer ---
-function SectionHeader({
-  icon: Icon,
-  title,
-}: {
-  icon: React.ElementType
-  title: string
-}) {
-  return (
-    <div className="flex items-center gap-2.5 mb-4">
-      <div className="flex size-8 items-center justify-center rounded-lg bg-secondary">
-        <Icon className="size-4 text-primary" />
-      </div>
-      <h2 className="text-lg font-semibold text-foreground">{title}</h2>
-    </div>
-  )
+// --- Section content (practice-specific) ---
+const difficultyStyles: Record<string, string> = {
+  Easy: "bg-emerald-500/15 text-emerald-400 border-emerald-500/20",
+  Medium: "bg-amber-500/15 text-amber-400 border-amber-500/20",
+  Hard: "bg-rose-500/15 text-rose-400 border-rose-500/20",
 }
 
-function SectionContent({
+function PracticeSectionContent({
   sectionId,
-  topic,
-  content,
+  problem,
+  code,
+  onCodeChange,
 }: {
-  sectionId: SectionId
-  topic: Topic
-  content: TopicContent
+  sectionId: PracticeSectionId
+  problem: ProblemWithTopic
+  code: string
+  onCodeChange: (value: string) => void
 }) {
   switch (sectionId) {
-    case "theory":
+    case "description":
       return (
         <>
-          <SectionHeader icon={BookOpen} title="Theory & Description" />
-          <div className="mb-6 flex flex-col gap-4">
-            {content.theory.split("\n\n").map((paragraph, i) => (
-              <p
-                key={i}
-                className="text-sm leading-relaxed text-foreground/85 md:text-base md:leading-relaxed"
-              >
-                {paragraph}
-              </p>
-            ))}
-          </div>
-          <div className="mb-6 rounded-lg border border-border/60 bg-card p-4">
-            <div className="mb-3 flex items-center gap-2">
-              <Lightbulb className="size-4 text-amber-400" />
-              <h3 className="text-sm font-semibold text-foreground">
-                Common Use Cases
-              </h3>
-            </div>
-            <ul className="grid gap-1.5 sm:grid-cols-2">
-              {content.useCases.map((uc) => (
-                <li
-                  key={uc}
-                  className="flex items-start gap-2 text-sm text-muted-foreground"
-                >
-                  <span className="mt-2 block size-1 shrink-0 rounded-full bg-primary" />
-                  {uc}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <h3 className="mb-3 text-sm font-semibold text-foreground">
-            Complexity Cheat Sheet
-          </h3>
-          <ComplexityTable
-            rows={content.complexity}
-            spaceComplexity={content.spaceComplexity}
-          />
+          <nav
+            aria-label="Breadcrumb"
+            className="mb-4 flex items-center gap-1.5 text-sm text-muted-foreground"
+          >
+            <Link href="/" className="transition-colors hover:text-foreground">
+              Home
+            </Link>
+            <ChevronRight className="size-3.5 shrink-0" />
+            <Link
+              href={`/problems/${problem.topicSlug}`}
+              className="transition-colors hover:text-foreground"
+            >
+              {problem.topicName}
+            </Link>
+            <ChevronRight className="size-3.5 shrink-0" />
+            <span className="truncate font-semibold text-foreground">
+              {problem.name}
+            </span>
+          </nav>
+          <Badge
+            variant="outline"
+            className={`mb-4 text-xs ${difficultyStyles[problem.difficulty]}`}
+          >
+            {problem.difficulty}
+          </Badge>
+          <p className="mb-4 text-sm leading-relaxed text-muted-foreground">
+            Solve this problem in the Code tab and use the Visualization tab to
+            understand the algorithm. Open on LeetCode for the full statement and
+            to submit.
+          </p>
+          <a
+            href={problem.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary/80"
+          >
+            Open on LeetCode
+            <ExternalLink className="size-3.5" />
+          </a>
         </>
       )
     case "code":
       return (
-        <>
-          <SectionHeader icon={Code2} title="Code Examples" />
-          <CodeBlock examples={content.codeExamples} />
-        </>
+        <div className="flex h-full min-h-0 flex-col">
+          <div className="flex-1 min-h-[280px]">
+            <ProblemCodeEditor value={code} onChange={onCodeChange} />
+          </div>
+        </div>
       )
     case "visualization":
       return (
-        <>
-          <SectionHeader icon={Eye} title="Interactive Visualization" />
-          <InteractiveVisualization topicName={topic.name} />
-        </>
-      )
-    case "problems":
-      return (
-        <>
-          <SectionHeader icon={ListChecks} title="Practice Problems" />
-          <PracticeProblems problems={content.problems} />
-        </>
+        <ProblemVisualization
+          topicSlug={problem.topicSlug}
+          problemId={problem.id}
+          problemName={problem.name}
+        />
       )
   }
 }
 
 // --- Drop zone overlay ---
-function DropZoneOverlay({ zone }: { zone: "left" | "right" | "top" | "bottom" | "center" | null }) {
+function DropZoneOverlay({
+  zone,
+}: {
+  zone: "left" | "right" | "top" | "bottom" | "center" | null
+}) {
   if (!zone) return null
-  const base = "absolute z-10 bg-primary/25 pointer-events-none border-2 border-primary rounded transition-all duration-75"
+  const base =
+    "absolute z-10 bg-primary/25 pointer-events-none border-2 border-primary rounded transition-all duration-75"
   const classes = {
     center: "inset-1",
     left: "top-0 bottom-0 left-0 w-1/3",
@@ -279,17 +272,16 @@ function DropZoneOverlay({ zone }: { zone: "left" | "right" | "top" | "bottom" |
   return <div className={`${base} ${classes[zone]}`} />
 }
 
-// --- Draggable tab (section) ---
 function PanelTab({
   sectionId,
   isActive,
   onClick,
 }: {
-  sectionId: SectionId
+  sectionId: PracticeSectionId
   isActive: boolean
   onClick: () => void
 }) {
-  const { label } = SECTION_CONFIG[sectionId]
+  const { label, icon: Icon } = SECTION_CONFIG[sectionId]
   return (
     <div
       role="tab"
@@ -305,26 +297,34 @@ function PanelTab({
         ${isActive ? "bg-secondary text-foreground" : "bg-muted/50 text-muted-foreground hover:bg-muted"}
       `}
     >
+      <Icon className="size-3.5 shrink-0" />
       <span>{label}</span>
     </div>
   )
 }
 
-// --- Leaf pane: tab bar + drop zones + content ---
 function LeafPane({
   node,
-  topic,
-  content,
+  problem,
+  code,
+  onCodeChange,
   onTabClick,
   onMoveTab,
 }: {
   node: LayoutLeaf
-  topic: Topic
-  content: TopicContent
-  onTabClick: (nodeId: string, sectionId: SectionId) => void
-  onMoveTab: (tabId: SectionId, targetNodeId: string, position: "left" | "right" | "top" | "bottom" | "center") => void
+  problem: ProblemWithTopic
+  code: string
+  onCodeChange: (value: string) => void
+  onTabClick: (nodeId: string, sectionId: PracticeSectionId) => void
+  onMoveTab: (
+    tabId: PracticeSectionId,
+    targetNodeId: string,
+    position: "left" | "right" | "top" | "bottom" | "center"
+  ) => void
 }) {
-  const [dropZone, setDropZone] = useState<"left" | "right" | "top" | "bottom" | "center" | null>(null)
+  const [dropZone, setDropZone] = useState<
+    "left" | "right" | "top" | "bottom" | "center" | null
+  >(null)
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault()
@@ -343,9 +343,13 @@ function LeafPane({
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault()
-    const sectionId = e.dataTransfer.getData("sectionId") as SectionId | ""
-    if (sectionId && Object.keys(SECTION_CONFIG).includes(sectionId) && dropZone) {
-      onMoveTab(sectionId as SectionId, node.id, dropZone)
+    const sectionId = e.dataTransfer.getData("sectionId") as PracticeSectionId | ""
+    if (
+      sectionId &&
+      Object.keys(SECTION_CONFIG).includes(sectionId) &&
+      dropZone
+    ) {
+      onMoveTab(sectionId as PracticeSectionId, node.id, dropZone)
     }
     setDropZone(null)
   }
@@ -370,10 +374,11 @@ function LeafPane({
       </div>
       <div className="flex-1 min-h-0 overflow-auto p-4">
         {node.activeTab ? (
-          <SectionContent
+          <PracticeSectionContent
             sectionId={node.activeTab}
-            topic={topic}
-            content={content}
+            problem={problem}
+            code={code}
+            onCodeChange={onCodeChange}
           />
         ) : (
           <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
@@ -385,20 +390,25 @@ function LeafPane({
   )
 }
 
-// --- Split pane: resizable divider + two children ---
 function SplitPane({
   node,
-  topic,
-  content,
+  problem,
+  code,
+  onCodeChange,
   onTabClick,
   onMoveTab,
   onRatioChange,
 }: {
   node: LayoutSplit
-  topic: Topic
-  content: TopicContent
-  onTabClick: (nodeId: string, sectionId: SectionId) => void
-  onMoveTab: (tabId: SectionId, targetNodeId: string, position: "left" | "right" | "top" | "bottom" | "center") => void
+  problem: ProblemWithTopic
+  code: string
+  onCodeChange: (value: string) => void
+  onTabClick: (nodeId: string, sectionId: PracticeSectionId) => void
+  onMoveTab: (
+    tabId: PracticeSectionId,
+    targetNodeId: string,
+    position: "left" | "right" | "top" | "bottom" | "center"
+  ) => void
   onRatioChange: (splitId: string, ratio: number) => void
 }) {
   const [ratio, setRatio] = useState(node.ratio)
@@ -443,8 +453,9 @@ function SplitPane({
       >
         <LayoutTree
           node={node.first}
-          topic={topic}
-          content={content}
+          problem={problem}
+          code={code}
+          onCodeChange={onCodeChange}
           onTabClick={onTabClick}
           onMoveTab={onMoveTab}
           onRatioChange={onRatioChange}
@@ -459,7 +470,11 @@ function SplitPane({
         `}
       >
         <div
-          className={isRow ? "w-0.5 h-6 bg-border rounded-full" : "h-0.5 w-6 bg-border rounded-full"}
+          className={
+            isRow
+              ? "w-0.5 h-6 bg-border rounded-full"
+              : "h-0.5 w-6 bg-border rounded-full"
+          }
         />
       </div>
       <div
@@ -471,8 +486,9 @@ function SplitPane({
       >
         <LayoutTree
           node={node.second}
-          topic={topic}
-          content={content}
+          problem={problem}
+          code={code}
+          onCodeChange={onCodeChange}
           onTabClick={onTabClick}
           onMoveTab={onMoveTab}
           onRatioChange={onRatioChange}
@@ -482,28 +498,34 @@ function SplitPane({
   )
 }
 
-// --- Recursive layout tree ---
 function LayoutTree({
   node,
-  topic,
-  content,
+  problem,
+  code,
+  onCodeChange,
   onTabClick,
   onMoveTab,
   onRatioChange,
 }: {
   node: LayoutNode
-  topic: Topic
-  content: TopicContent
-  onTabClick: (nodeId: string, sectionId: SectionId) => void
-  onMoveTab: (tabId: SectionId, targetNodeId: string, position: "left" | "right" | "top" | "bottom" | "center") => void
+  problem: ProblemWithTopic
+  code: string
+  onCodeChange: (value: string) => void
+  onTabClick: (nodeId: string, sectionId: PracticeSectionId) => void
+  onMoveTab: (
+    tabId: PracticeSectionId,
+    targetNodeId: string,
+    position: "left" | "right" | "top" | "bottom" | "center"
+  ) => void
   onRatioChange: (splitId: string, ratio: number) => void
 }) {
   if (node.type === "leaf") {
     return (
       <LeafPane
         node={node}
-        topic={topic}
-        content={content}
+        problem={problem}
+        code={code}
+        onCodeChange={onCodeChange}
         onTabClick={onTabClick}
         onMoveTab={onMoveTab}
       />
@@ -512,8 +534,9 @@ function LayoutTree({
   return (
     <SplitPane
       node={node}
-      topic={topic}
-      content={content}
+      problem={problem}
+      code={code}
+      onCodeChange={onCodeChange}
       onTabClick={onTabClick}
       onMoveTab={onMoveTab}
       onRatioChange={onRatioChange}
@@ -521,17 +544,16 @@ function LayoutTree({
   )
 }
 
-// --- Main layout ---
-interface TopicPageLayoutProps {
-  topic: Topic
-  content: TopicContent
-}
-
-export function TopicPageLayout({ topic, content }: TopicPageLayoutProps) {
+export function PracticeLayout({ problem }: { problem: ProblemWithTopic }) {
   const [layout, setLayout] = useState<LayoutNode>(createInitialLayout)
+  const [code, setCode] = useState("")
 
   const handleMoveTab = useCallback(
-    (tabId: SectionId, targetNodeId: string, position: "left" | "right" | "top" | "bottom" | "center") => {
+    (
+      tabId: PracticeSectionId,
+      targetNodeId: string,
+      position: "left" | "right" | "top" | "bottom" | "center"
+    ) => {
       setLayout((prev) => {
         const { newRoot, removed } = removeTabFromTree(prev, tabId)
         if (!removed) return prev
@@ -542,15 +564,18 @@ export function TopicPageLayout({ topic, content }: TopicPageLayoutProps) {
     []
   )
 
-  const handleTabClick = useCallback((nodeId: string, sectionId: SectionId) => {
-    setLayout((prev) => {
-      const next = JSON.parse(JSON.stringify(prev)) as LayoutNode
-      const res = findNodeAndParent(next, nodeId)
-      if (!res || res.node.type !== "leaf") return prev
-      res.node.activeTab = sectionId
-      return next
-    })
-  }, [])
+  const handleTabClick = useCallback(
+    (nodeId: string, sectionId: PracticeSectionId) => {
+      setLayout((prev) => {
+        const next = JSON.parse(JSON.stringify(prev)) as LayoutNode
+        const res = findNodeAndParent(next, nodeId)
+        if (!res || res.node.type !== "leaf") return prev
+        res.node.activeTab = sectionId
+        return next
+      })
+    },
+    []
+  )
 
   const handleRatioChange = useCallback((splitId: string, ratio: number) => {
     setLayout((prev) => setSplitRatio(prev, splitId, ratio))
@@ -558,13 +583,16 @@ export function TopicPageLayout({ topic, content }: TopicPageLayoutProps) {
 
   return (
     <div className="flex w-full flex-col h-[calc(100vh-3.5rem)] min-h-[480px]">
-      <p className="mb-2 shrink-0 px-4 text-sm text-muted-foreground md:px-6">{topic.description}</p>
+      <p className="mb-2 shrink-0 px-4 text-sm text-muted-foreground md:px-6">
+        {problem.name} · {problem.difficulty}
+      </p>
 
       <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
         <LayoutTree
           node={layout}
-          topic={topic}
-          content={content}
+          problem={problem}
+          code={code}
+          onCodeChange={setCode}
           onTabClick={handleTabClick}
           onMoveTab={handleMoveTab}
           onRatioChange={handleRatioChange}

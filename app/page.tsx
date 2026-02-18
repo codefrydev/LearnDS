@@ -1,8 +1,13 @@
 import { HeroSection } from "@/components/hero-section"
 import { TopicCard } from "@/components/topic-card"
+import { ProblemCategoryCard } from "@/components/problem-category-card"
 import { topics } from "@/lib/topics"
+import { getProblemCategories } from "@/lib/problems"
+import { getTopicBySlug } from "@/lib/topics"
 
 export default function HomePage() {
+  const problemCategories = getProblemCategories()
+
   return (
     <>
       <HeroSection />
@@ -19,6 +24,29 @@ export default function HomePage() {
           {topics.map((topic) => (
             <TopicCard key={topic.slug} topic={topic} />
           ))}
+        </div>
+      </section>
+      <section className="mx-auto max-w-6xl px-4 py-12 md:px-6 md:py-16">
+        <div className="mb-8">
+          <h2 className="text-lg font-semibold text-foreground">
+            Problems
+          </h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Pick a topic to see problems and practice with code.
+          </p>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {problemCategories.map((category) => {
+            const topic = getTopicBySlug(category.topicSlug)
+            if (!topic) return null
+            return (
+              <ProblemCategoryCard
+                key={category.topicSlug}
+                category={category}
+                topic={topic}
+              />
+            )
+          })}
         </div>
       </section>
     </>
