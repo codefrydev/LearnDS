@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect } from "react"
 import Link from "next/link"
-import { ChevronRight, BookOpen, Code2, Eye, ListChecks, Lightbulb } from "lucide-react"
+import { BookOpen, Code2, Eye, ListChecks, Lightbulb } from "lucide-react"
 import type { Topic } from "@/lib/topics"
 import type { TopicContent } from "@/lib/topic-content"
 import { ComplexityTable } from "@/components/complexity-table"
@@ -558,29 +558,10 @@ export function TopicPageLayout({ topic, content }: TopicPageLayoutProps) {
   }, [])
 
   return (
-    <div className="mx-auto max-w-[1600px] px-4 py-4 md:px-6 md:py-5 flex flex-col h-[calc(100vh-4.5rem)] min-h-[560px]">
-      <nav aria-label="Breadcrumb" className="mb-2 shrink-0">
-        <ol className="flex items-center gap-1.5 text-sm text-muted-foreground">
-          <li>
-            <Link href="/" className="transition-colors hover:text-foreground">
-              Home
-            </Link>
-          </li>
-          <li>
-            <ChevronRight className="size-3.5" />
-          </li>
-          <li className="font-medium text-foreground">{topic.name}</li>
-        </ol>
-      </nav>
+    <div className="flex w-full flex-col h-[calc(100vh-3.5rem)] min-h-[480px]">
+      <p className="mb-2 shrink-0 px-4 text-sm text-muted-foreground md:px-6">{topic.description}</p>
 
-      <header className="mb-2 shrink-0">
-        <h1 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">
-          {topic.name}
-        </h1>
-        <p className="mt-2 text-base text-muted-foreground">{topic.description}</p>
-      </header>
-
-      <div className="flex-1 min-h-0 flex flex-col rounded-lg overflow-hidden">
+      <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
         <LayoutTree
           node={layout}
           topic={topic}
@@ -591,7 +572,7 @@ export function TopicPageLayout({ topic, content }: TopicPageLayoutProps) {
         />
       </div>
 
-      <div className="mt-2 shrink-0 border-t border-border/40 pt-2">
+      <div className="mt-2 shrink-0 border-t border-border/40 px-4 pt-2 md:px-6">
         <Link
           href="/"
           className="text-sm font-medium text-primary transition-colors hover:text-primary/80"

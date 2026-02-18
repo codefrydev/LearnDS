@@ -1,16 +1,1 @@
-{
-  "name": "DSA Lab - Master Data Structures",
-  "short_name": "DSA Lab",
-  "description": "Learn data structures through interactive examples, code walkthroughs, and guided practice problems.",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#1a1d2e",
-  "theme_color": "#1a1d2e",
-  "icons": [
-    {
-      "src": "/icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml"
-    }
-  ]
-}
+{"name":"DSA Lab - Master Data Structures","short_name":"DSA Lab","description":"Learn data structures through interactive examples, code walkthroughs, and guided practice problems.","start_url":"/","display":"standalone","background_color":"#1a1d2e","theme_color":"#1a1d2e","icons":[{"src":"/favicon-32x32.png","sizes":"32x32","type":"image/png"}]}
