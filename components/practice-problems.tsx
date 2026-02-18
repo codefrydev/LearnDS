@@ -15,6 +15,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import type { PracticeProblem } from "@/lib/topic-content"
+import { uiStrings } from "@/lib/ui-strings"
 
 const difficultyStyles: Record<string, string> = {
   Easy: "bg-emerald-500/15 text-emerald-400 border-emerald-500/20",
@@ -40,22 +41,30 @@ export function PracticeProblems({
     })
   }
 
+  if (problems.length === 0) {
+    return (
+      <div className="rounded-lg border border-border/60 bg-secondary/30 px-4 py-8 text-center">
+        <p className="text-sm text-muted-foreground">{uiStrings.practice.noProblems}</p>
+      </div>
+    )
+  }
+
   return (
     <div className="overflow-hidden rounded-lg border border-border/60">
       <Table>
         <TableHeader>
           <TableRow className="border-border/60 bg-secondary/50 hover:bg-secondary/50">
             <TableHead className="w-12 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              <span className="sr-only">Status</span>
+              <span className="sr-only">{uiStrings.practice.tableHeaders.status}</span>
             </TableHead>
             <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Problem
+              {uiStrings.practice.tableHeaders.problem}
             </TableHead>
             <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Difficulty
+              {uiStrings.practice.tableHeaders.difficulty}
             </TableHead>
             <TableHead className="w-20 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              <span className="sr-only">Action</span>
+              <span className="sr-only">{uiStrings.practice.tableHeaders.actions}</span>
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -71,7 +80,7 @@ export function PracticeProblems({
                 <Checkbox
                   checked={completed.has(problem.id)}
                   onCheckedChange={() => toggleProblem(problem.id)}
-                  aria-label={`Mark ${problem.name} as complete`}
+                  aria-label={`${uiStrings.practice.markComplete}: ${problem.name}`}
                   className="border-border data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                 />
               </TableCell>
@@ -101,7 +110,7 @@ export function PracticeProblems({
                     asChild
                   >
                     <Link href={`${practiceBasePath}/${problem.id}`}>
-                      Practice
+                      {uiStrings.practice.practiceButton}
                       <ArrowRight className="size-3" />
                     </Link>
                   </Button>

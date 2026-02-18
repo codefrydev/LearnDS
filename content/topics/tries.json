@@ -1,0 +1,87 @@
+{
+  "slug": "tries",
+  "theory": "A trie (pronounced 'try'), also called a prefix tree, is a tree-like data structure used to store a dynamic set of strings. Each node represents a single character, and paths from root to marked nodes form complete words. Tries excel at prefix-based operations, making them ideal for autocomplete systems, spell checkers, and IP routing tables. They trade space for speed, providing O(m) operations where m is the length of the key.",
+  "useCases": [
+    "Autocomplete and typeahead suggestions",
+    "Spell checking and correction",
+    "IP routing (longest prefix matching)",
+    "Word games and dictionary lookups"
+  ],
+  "complexity": [
+    {
+      "operation": "Search",
+      "average": "O(m)",
+      "worst": "O(m)"
+    },
+    {
+      "operation": "Insert",
+      "average": "O(m)",
+      "worst": "O(m)"
+    },
+    {
+      "operation": "Delete",
+      "average": "O(m)",
+      "worst": "O(m)"
+    },
+    {
+      "operation": "Prefix Search",
+      "average": "O(m + k)",
+      "worst": "O(m + k)"
+    }
+  ],
+  "spaceComplexity": "O(n * m)",
+  "codeExamples": [
+    {
+      "language": "javascript",
+      "label": "JavaScript",
+      "code": "class TrieNode {\n  constructor() {\n  this.children = new Map();\n  this.isEnd = false;\n  }\n}\n\nclass Trie {\n  constructor() { this.root = new TrieNode(); }\n\n  insert(word) {\n  let node = this.root;\n  for (const ch of word) {\n    if (!node.children.has(ch))\n      node.children.set(ch, new TrieNode());\n    node = node.children.get(ch);\n  }\n  node.isEnd = true;\n  }\n\n  search(word) {\n  const node = this._find(word);\n  return node != null && node.isEnd;\n  }\n\n  startsWith(prefix) {\n  return this._find(prefix) != null;\n  }\n\n  _find(prefix) {\n  let node = this.root;\n  for (const ch of prefix) {\n    if (!node.children.has(ch)) return null;\n    node = node.children.get(ch);\n  }\n  return node;\n  }\n}\n\nconst trie = new Trie();\ntrie.insert(\"apple\");\ntrie.insert(\"app\");\nconsole.log(trie.search(\"app\"));      // true\nconsole.log(trie.startsWith(\"ap\"));  // true"
+    },
+    {
+      "language": "csharp",
+      "label": "C#",
+      "code": "using System.Collections.Generic;\n\npublic class TrieNode {\n  public Dictionary<char, TrieNode> Children = new();\n  public bool IsEnd;\n}\n\npublic class Trie {\n  private readonly TrieNode root = new();\n\n  public void Insert(string word) {\n  var node = root;\n  foreach (char c in word) {\n    if (!node.Children.ContainsKey(c))\n      node.Children[c] = new TrieNode();\n    node = node.Children[c];\n  }\n  node.IsEnd = true;\n  }\n\n  public bool Search(string word) {\n  var node = Find(word);\n  return node != null && node.IsEnd;\n  }\n\n  public bool StartsWith(string prefix) =>\n  Find(prefix) != null;\n\n  private TrieNode Find(string prefix) {\n  var node = root;\n  foreach (char c in prefix) {\n    if (!node.Children.TryGetValue(c, out var next))\n      return null;\n    node = next;\n  }\n  return node;\n  }\n}"
+    },
+    {
+      "language": "python",
+      "label": "Python",
+      "code": "class TrieNode:\n  def __init__(self):\n      self.children = {}\n      self.is_end = False\n\nclass Trie:\n  def __init__(self):\n      self.root = TrieNode()\n\n  def insert(self, word):\n      node = self.root\n      for ch in word:\n          if ch not in node.children:\n              node.children[ch] = TrieNode()\n          node = node.children[ch]\n      node.is_end = True\n\n  def search(self, word):\n      node = self._find(word)\n      return node is not None and node.is_end\n\n  def starts_with(self, prefix):\n      return self._find(prefix) is not None\n\n  def _find(self, prefix):\n      node = self.root\n      for ch in prefix:\n          if ch not in node.children:\n              return None\n          node = node.children[ch]\n      return node\n\n# Usage\ntrie = Trie()\ntrie.insert(\"apple\")\ntrie.insert(\"app\")\ntrie.insert(\"application\")\nprint(trie.search(\"app\"))        # True\nprint(trie.search(\"ap\"))         # False\nprint(trie.starts_with(\"ap\"))    # True"
+    },
+    {
+      "language": "go",
+      "label": "Go",
+      "code": "package main\n\nimport \"fmt\"\n\ntype TrieNode struct {\n  children map[byte]*TrieNode\n  isEnd    bool\n}\n\ntype Trie struct {\n  root *TrieNode\n}\n\nfunc NewTrie() *Trie {\n  return &Trie{root: &TrieNode{children: make(map[byte]*TrieNode)}}\n}\n\nfunc (t *Trie) Insert(word string) {\n  node := t.root\n  for i := 0; i < len(word); i++ {\n      c := word[i]\n      if node.children[c] == nil {\n          node.children[c] = &TrieNode{children: make(map[byte]*TrieNode)}\n      }\n      node = node.children[c]\n  }\n  node.isEnd = true\n}\n\nfunc (t *Trie) Search(word string) bool {\n  node := t.find(word)\n  return node != nil && node.isEnd\n}\n\nfunc (t *Trie) StartsWith(prefix string) bool {\n  return t.find(prefix) != nil\n}\n\nfunc (t *Trie) find(prefix string) *TrieNode {\n  node := t.root\n  for i := 0; i < len(prefix); i++ {\n      c := prefix[i]\n      if node.children[c] == nil { return nil }\n      node = node.children[c]\n  }\n  return node\n}\n\nfunc main() {\n  trie := NewTrie()\n  trie.Insert(\"apple\")\n  trie.Insert(\"app\")\n  fmt.Println(trie.Search(\"app\"))\n  fmt.Println(trie.StartsWith(\"ap\"))\n}"
+    }
+  ],
+  "problems": [
+    {
+      "id": "1",
+      "name": "Implement Trie (Prefix Tree)",
+      "difficulty": "Medium",
+      "url": "#"
+    },
+    {
+      "id": "2",
+      "name": "Design Add and Search Words",
+      "difficulty": "Medium",
+      "url": "#"
+    },
+    {
+      "id": "3",
+      "name": "Replace Words",
+      "difficulty": "Medium",
+      "url": "#"
+    },
+    {
+      "id": "4",
+      "name": "Map Sum Pairs",
+      "difficulty": "Medium",
+      "url": "#"
+    },
+    {
+      "id": "5",
+      "name": "Word Search II",
+      "difficulty": "Hard",
+      "url": "#"
+    }
+  ]
+}

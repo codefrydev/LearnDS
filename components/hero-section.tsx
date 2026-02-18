@@ -1,6 +1,14 @@
 import { Terminal } from "lucide-react"
+import { siteConfig } from "@/lib/site-config"
+
+const statColorClass: Record<string, string> = {
+  topic1: "bg-topic-1",
+  topic3: "bg-topic-3",
+  primary: "bg-primary",
+}
 
 export function HeroSection() {
+  const { hero } = siteConfig
   return (
     <section className="relative overflow-hidden border-b border-border/40 bg-background">
       {/* Subtle grid pattern */}
@@ -16,30 +24,24 @@ export function HeroSection() {
         <div className="flex flex-col items-center text-center">
           <div className="mb-6 flex items-center gap-2 rounded-full border border-border/60 bg-secondary px-3.5 py-1.5 text-xs font-medium text-muted-foreground">
             <Terminal className="size-3.5 text-primary" />
-            Interactive Learning Platform
+            {hero.badge}
           </div>
           <h1 className="text-balance text-3xl font-bold tracking-tight text-foreground md:text-5xl lg:text-6xl">
-            Master Data Structures
+            {hero.headline}
           </h1>
           <p className="mt-4 max-w-xl text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
-            Build a solid foundation in computer science through interactive
-            visualizations, real code examples, and guided practice problems.
+            {hero.subtitle}
           </p>
           <div className="mt-8 flex items-center gap-3 text-sm text-muted-foreground">
-            <span className="flex items-center gap-1.5">
-              <span className="size-1.5 rounded-full bg-emerald-400" />
-              8 Topics
-            </span>
-            <span className="text-border">|</span>
-            <span className="flex items-center gap-1.5">
-              <span className="size-1.5 rounded-full bg-amber-400" />
-              Code in 3 Languages
-            </span>
-            <span className="text-border">|</span>
-            <span className="flex items-center gap-1.5">
-              <span className="size-1.5 rounded-full bg-primary" />
-              Practice Problems
-            </span>
+            {hero.stats.flatMap((stat, i) => [
+              ...(i > 0 ? [<span key={`sep-${i}`} className="text-border">|</span>] : []),
+              <span key={stat.label} className="flex items-center gap-1.5">
+                <span
+                  className={`size-1.5 rounded-full ${statColorClass[stat.colorKey] ?? "bg-primary"}`}
+                />
+                {stat.label}
+              </span>,
+            ])}
           </div>
         </div>
       </div>

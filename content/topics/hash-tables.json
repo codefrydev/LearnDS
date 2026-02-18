@@ -1,0 +1,93 @@
+{
+  "slug": "hash-tables",
+  "theory": "A hash table (or hash map) stores key-value pairs using a hash function to compute an index into an array of buckets. The hash function converts keys into array indices, enabling near-constant-time lookups. Collision resolution strategies like chaining or open addressing handle cases where multiple keys map to the same index. Hash tables are among the most versatile and performant data structures.",
+  "useCases": [
+    "Database indexing and caching",
+    "Implementing sets and dictionaries",
+    "Counting frequencies and deduplication",
+    "Symbol tables in compilers"
+  ],
+  "complexity": [
+    {
+      "operation": "Access",
+      "average": "O(1)",
+      "worst": "O(n)"
+    },
+    {
+      "operation": "Search",
+      "average": "O(1)",
+      "worst": "O(n)"
+    },
+    {
+      "operation": "Insertion",
+      "average": "O(1)",
+      "worst": "O(n)"
+    },
+    {
+      "operation": "Deletion",
+      "average": "O(1)",
+      "worst": "O(n)"
+    }
+  ],
+  "spaceComplexity": "O(n)",
+  "codeExamples": [
+    {
+      "language": "javascript",
+      "label": "JavaScript",
+      "code": "// Hash table using Map (or plain object)\nconst phoneBook = new Map();\n\n// Insert — O(1) average\nphoneBook.set(\"Alice\", \"555-0101\");\nphoneBook.set(\"Bob\", \"555-0102\");\nphoneBook.set(\"Carol\", \"555-0103\");\n\n// Lookup — O(1) average\nconsole.log(phoneBook.get(\"Alice\"));  // 555-0101\n\n// Check existence — O(1) average\nif (phoneBook.has(\"Bob\")) console.log(\"Found Bob\");\n\n// Delete — O(1) average\nphoneBook.delete(\"Carol\");\n\n// Iterate\nfor (const [name, number] of phoneBook) {\n  console.log(name + \": \" + number);\n}\n\nconsole.log(phoneBook.get(\"Dave\") ?? \"Not found\");"
+    },
+    {
+      "language": "csharp",
+      "label": "C#",
+      "code": "using System.Collections.Generic;\n\nvar phoneBook = new Dictionary<string, string>();\n\n// Insert — O(1) average\nphoneBook[\"Alice\"] = \"555-0101\";\nphoneBook[\"Bob\"]   = \"555-0102\";\nphoneBook[\"Carol\"] = \"555-0103\";\n\n// Lookup — O(1) average\nConsole.WriteLine(phoneBook[\"Alice\"]);\n\n// Check existence — O(1) average\nif (phoneBook.ContainsKey(\"Bob\"))\n  Console.WriteLine(\"Found Bob\");\n\n// Delete — O(1) average\nphoneBook.Remove(\"Carol\");\n\n// Iterate\nforeach (var kv in phoneBook)\n  Console.WriteLine($\"{kv.Key}: {kv.Value}\");\n\nConsole.WriteLine(phoneBook.GetValueOrDefault(\"Dave\", \"Not found\"));"
+    },
+    {
+      "language": "python",
+      "label": "Python",
+      "code": "# Hash Table using Python dict\n\n# Create\nphone_book = {}\n\n# Insert — O(1) average\nphone_book[\"Alice\"] = \"555-0101\"\nphone_book[\"Bob\"]   = \"555-0102\"\nphone_book[\"Carol\"] = \"555-0103\"\n\n# Lookup — O(1) average\nprint(phone_book[\"Alice\"])    # 555-0101\n\n# Check existence — O(1) average\nif \"Bob\" in phone_book:\n  print(\"Found Bob\")\n\n# Delete — O(1) average\ndel phone_book[\"Carol\"]\n\n# Iterate\nfor name, number in phone_book.items():\n  print(f\"{name}: {number}\")\n\n# Get with default\nval = phone_book.get(\"Dave\", \"Not found\")\nprint(val)  # Not found"
+    },
+    {
+      "language": "go",
+      "label": "Go",
+      "code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n  phoneBook := make(map[string]string)\n\n  // Insert — O(1) average\n  phoneBook[\"Alice\"] = \"555-0101\"\n  phoneBook[\"Bob\"]   = \"555-0102\"\n  phoneBook[\"Carol\"] = \"555-0103\"\n\n  // Lookup — O(1) average\n  fmt.Println(phoneBook[\"Alice\"])\n\n  // Check existence — O(1) average\n  if _, ok := phoneBook[\"Bob\"]; ok {\n      fmt.Println(\"Found Bob\")\n  }\n\n  // Delete — O(1) average\n  delete(phoneBook, \"Carol\")\n\n  for name, number := range phoneBook {\n      fmt.Println(name + \": \" + number)\n  }\n}"
+    }
+  ],
+  "problems": [
+    {
+      "id": "1",
+      "name": "Two Sum",
+      "difficulty": "Easy",
+      "url": "#"
+    },
+    {
+      "id": "2",
+      "name": "Valid Anagram",
+      "difficulty": "Easy",
+      "url": "#"
+    },
+    {
+      "id": "3",
+      "name": "Group Anagrams",
+      "difficulty": "Medium",
+      "url": "#"
+    },
+    {
+      "id": "4",
+      "name": "Top K Frequent Elements",
+      "difficulty": "Medium",
+      "url": "#"
+    },
+    {
+      "id": "5",
+      "name": "Longest Consecutive Sequence",
+      "difficulty": "Medium",
+      "url": "#"
+    },
+    {
+      "id": "6",
+      "name": "LRU Cache",
+      "difficulty": "Hard",
+      "url": "#"
+    }
+  ]
+}

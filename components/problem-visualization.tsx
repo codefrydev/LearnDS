@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic"
 import { Play } from "lucide-react"
+import { uiStrings } from "@/lib/ui-strings"
 
 const TwoSumVisualization = dynamic(
   () =>
@@ -18,17 +19,18 @@ const TrappingRainWaterVisualization = dynamic(
 )
 
 function PlaceholderVisualization({ problemName }: { problemName: string }) {
+  const { title, comingSoon } = uiStrings.visualizationPlaceholder
+  const message = comingSoon.replace("{problemName}", problemName)
   return (
     <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-border/60 bg-secondary/30 p-8 text-center md:p-12">
       <div className="mb-4 flex size-14 items-center justify-center rounded-full bg-secondary">
         <Play className="size-6 text-primary" />
       </div>
       <h4 className="mb-2 text-base font-semibold text-foreground">
-        Interactive Visualization
+        {title}
       </h4>
       <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
-        Animation for &quot;{problemName}&quot; coming soon. Use the code editor to
-        implement your solution.
+        {message}
       </p>
     </div>
   )

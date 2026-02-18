@@ -1,6 +1,8 @@
 "use client"
 
 import dynamic from "next/dynamic"
+import { useTheme } from "next-themes"
+import { uiStrings } from "@/lib/ui-strings"
 
 const MonacoEditor = dynamic(
   () => import("@monaco-editor/react").then((mod) => mod.default),
@@ -24,15 +26,18 @@ export function ProblemCodeEditor({
   onChange?: (value: string) => void
   language?: string
 }) {
+  const { resolvedTheme } = useTheme()
+  const isDark = resolvedTheme !== "light"
+
   return (
-    <div className="h-full min-h-[280px] rounded-lg border border-border/60 overflow-hidden bg-[#1e1e1e]">
+    <div className="h-full min-h-[280px] rounded-lg border border-border/60 overflow-hidden bg-code-bg">
       <MonacoEditor
         height="100%"
         defaultLanguage={language}
         language={language}
         value={value ?? DEFAULT_STARTER}
         onChange={(v) => onChange?.(v ?? "")}
-        theme="vs-dark"
+        theme={isDark ? "vs-dark" : "vs"}
         options={{
           minimap: { enabled: false },
           fontSize: 14,
@@ -42,7 +47,7 @@ export function ProblemCodeEditor({
         }}
         loading={
           <div className="flex h-[280px] items-center justify-center bg-muted/30 text-sm text-muted-foreground">
-            Loading editor…
+            {uiStrings.codeEditor.loading}
           </div>
         }
       />

@@ -8,19 +8,29 @@ import { ComplexityTable } from "@/components/complexity-table"
 import { CodeBlock } from "@/components/code-block"
 import { InteractiveVisualization } from "@/components/interactive-visualization"
 import { PracticeProblems } from "@/components/practice-problems"
+import { uiStrings } from "@/lib/ui-strings"
 
 // --- Section config (each tab = one section) ---
 export type SectionId = "theory" | "code" | "visualization" | "problems"
 
-const SECTION_CONFIG: Record<
-  SectionId,
-  { label: string; icon: React.ElementType }
-> = {
-  theory: { label: "Theory", icon: BookOpen },
-  code: { label: "Code", icon: Code2 },
-  visualization: { label: "Visualization", icon: Eye },
-  problems: { label: "Problems", icon: ListChecks },
+const SECTION_ICONS: Record<SectionId, React.ElementType> = {
+  theory: BookOpen,
+  code: Code2,
+  visualization: Eye,
+  problems: ListChecks,
 }
+
+function getSectionConfig(): Record<SectionId, { label: string; icon: React.ElementType }> {
+  const s = uiStrings.sections
+  return {
+    theory: { label: s.theory, icon: SECTION_ICONS.theory },
+    code: { label: s.code, icon: SECTION_ICONS.code },
+    visualization: { label: s.visualization, icon: SECTION_ICONS.visualization },
+    problems: { label: s.problems, icon: SECTION_ICONS.problems },
+  }
+}
+
+const SECTION_CONFIG = getSectionConfig()
 
 // --- Layout tree types ---
 export interface LayoutLeaf {
@@ -198,11 +208,12 @@ function SectionContent({
   topic: Topic
   content: TopicContent
 }) {
+  const titles = uiStrings.sectionTitles
   switch (sectionId) {
     case "theory":
       return (
         <>
-          <SectionHeader icon={BookOpen} title="Theory & Description" />
+          <SectionHeader icon={BookOpen} title={titles.theoryAndDescription} />
           <div className="mb-6 flex flex-col gap-4">
             {content.theory.split("\n\n").map((paragraph, i) => (
               <p
@@ -217,7 +228,7 @@ function SectionContent({
             <div className="mb-3 flex items-center gap-2">
               <Lightbulb className="size-4 text-amber-400" />
               <h3 className="text-sm font-semibold text-foreground">
-                Common Use Cases
+                {titles.useCases}
               </h3>
             </div>
             <ul className="grid gap-1.5 sm:grid-cols-2">
@@ -233,7 +244,7 @@ function SectionContent({
             </ul>
           </div>
           <h3 className="mb-3 text-sm font-semibold text-foreground">
-            Complexity Cheat Sheet
+            {titles.complexityCheatSheet}
           </h3>
           <ComplexityTable
             rows={content.complexity}
@@ -244,21 +255,21 @@ function SectionContent({
     case "code":
       return (
         <>
-          <SectionHeader icon={Code2} title="Code Examples" />
+          <SectionHeader icon={Code2} title={titles.codeExamples} />
           <CodeBlock examples={content.codeExamples} />
         </>
       )
     case "visualization":
       return (
         <>
-          <SectionHeader icon={Eye} title="Interactive Visualization" />
+          <SectionHeader icon={Eye} title={titles.interactiveVisualization} />
           <InteractiveVisualization topicName={topic.name} />
         </>
       )
     case "problems":
       return (
         <>
-          <SectionHeader icon={ListChecks} title="Practice Problems" />
+          <SectionHeader icon={ListChecks} title={titles.practiceProblems} />
           <PracticeProblems problems={content.problems} />
         </>
       )

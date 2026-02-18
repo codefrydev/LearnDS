@@ -7,18 +7,30 @@ import { Badge } from "@/components/ui/badge"
 import { ProblemCodeEditor } from "@/components/problem-code-editor"
 import { ProblemVisualization } from "@/components/problem-visualization"
 import type { ProblemWithTopic } from "@/lib/problems"
+import { uiStrings } from "@/lib/ui-strings"
 
 // --- Section config (same pattern as topic-page-layout) ---
 export type PracticeSectionId = "description" | "code" | "visualization"
 
-const SECTION_CONFIG: Record<
+const SECTION_ICONS: Record<PracticeSectionId, React.ElementType> = {
+  description: BookOpen,
+  code: Code2,
+  visualization: Eye,
+}
+
+function getPracticeSectionConfig(): Record<
   PracticeSectionId,
   { label: string; icon: React.ElementType }
-> = {
-  description: { label: "Description", icon: BookOpen },
-  code: { label: "Code", icon: Code2 },
-  visualization: { label: "Visualization", icon: Eye },
+> {
+  const s = uiStrings.sections
+  return {
+    description: { label: s.description, icon: SECTION_ICONS.description },
+    code: { label: s.code, icon: SECTION_ICONS.code },
+    visualization: { label: s.visualization, icon: SECTION_ICONS.visualization },
+  }
 }
+
+const SECTION_CONFIG = getPracticeSectionConfig()
 
 // --- Layout tree types (mirror topic-page-layout) ---
 export interface LayoutLeaf {
@@ -194,7 +206,7 @@ function PracticeSectionContent({
       return (
         <>
           <nav
-            aria-label="Breadcrumb"
+            aria-label={uiStrings.breadcrumb.ariaLabel}
             className="mb-4 flex items-center gap-1.5 text-sm text-muted-foreground"
           >
             <Link href="/" className="transition-colors hover:text-foreground">

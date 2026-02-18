@@ -4,9 +4,11 @@ import { ProblemCategoryCard } from "@/components/problem-category-card"
 import { topics } from "@/lib/topics"
 import { getProblemCategories } from "@/lib/problems"
 import { getTopicBySlug } from "@/lib/topics"
+import { siteConfig } from "@/lib/site-config"
 
 export default function HomePage() {
   const problemCategories = getProblemCategories()
+  const { home } = siteConfig
 
   return (
     <>
@@ -14,10 +16,10 @@ export default function HomePage() {
       <section className="mx-auto max-w-6xl px-4 py-12 md:px-6 md:py-16">
         <div className="mb-8">
           <h2 className="text-lg font-semibold text-foreground">
-            All Topics
+            {home.allTopicsTitle}
           </h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            Choose a data structure to begin your deep dive.
+            {home.allTopicsDescription}
           </p>
         </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -29,10 +31,10 @@ export default function HomePage() {
       <section className="mx-auto max-w-6xl px-4 py-12 md:px-6 md:py-16">
         <div className="mb-8">
           <h2 className="text-lg font-semibold text-foreground">
-            Problems
+            {home.problemsTitle}
           </h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            Pick a topic to see problems and practice with code.
+            {home.problemsDescription}
           </p>
         </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

@@ -1,0 +1,93 @@
+{
+  "slug": "queues",
+  "theory": "A queue is a First-In-First-Out (FIFO) data structure where elements are added at the rear and removed from the front. Like a line at a store, the first person in line is the first to be served. Queues are essential for scheduling tasks, managing requests in servers, and breadth-first graph traversals. Variants include priority queues, deques, and circular queues.",
+  "useCases": [
+    "Task scheduling and process management",
+    "Breadth-first search (BFS) traversals",
+    "Print job and request buffering",
+    "Message queues in distributed systems"
+  ],
+  "complexity": [
+    {
+      "operation": "Access",
+      "average": "O(n)",
+      "worst": "O(n)"
+    },
+    {
+      "operation": "Search",
+      "average": "O(n)",
+      "worst": "O(n)"
+    },
+    {
+      "operation": "Enqueue",
+      "average": "O(1)",
+      "worst": "O(1)"
+    },
+    {
+      "operation": "Dequeue",
+      "average": "O(1)",
+      "worst": "O(1)"
+    }
+  ],
+  "spaceComplexity": "O(n)",
+  "codeExamples": [
+    {
+      "language": "javascript",
+      "label": "JavaScript",
+      "code": "// Queue using array (shift for dequeue)\nconst queue = [];\n\n// Enqueue — O(1)\nqueue.push(\"A\");\nqueue.push(\"B\");\nqueue.push(\"C\");\n\n// Front — O(1)\nconsole.log(queue[0]);  // A\n\n// Dequeue — O(1)\nconsole.log(queue.shift());  // A\n\n// Size\nconsole.log(queue.length);  // 2"
+    },
+    {
+      "language": "csharp",
+      "label": "C#",
+      "code": "using System.Collections.Generic;\n\nvar queue = new Queue<string>();\n\n// Enqueue — O(1)\nqueue.Enqueue(\"A\");\nqueue.Enqueue(\"B\");\nqueue.Enqueue(\"C\");\n\n// Peek (front) — O(1)\nConsole.WriteLine(queue.Peek());  // A\n\n// Dequeue — O(1)\nConsole.WriteLine(queue.Dequeue());  // A\n\nConsole.WriteLine(queue.Count);  // 2"
+    },
+    {
+      "language": "python",
+      "label": "Python",
+      "code": "from collections import deque\n\nclass Queue:\n  def __init__(self):\n      self.items = deque()\n\n  def enqueue(self, item):\n      self.items.append(item)\n\n  def dequeue(self):\n      if self.is_empty():\n          raise IndexError(\"Queue is empty\")\n      return self.items.popleft()\n\n  def front(self):\n      if self.is_empty():\n          raise IndexError(\"Queue is empty\")\n      return self.items[0]\n\n  def is_empty(self):\n      return len(self.items) == 0\n\n  def size(self):\n      return len(self.items)\n\n# Usage\nq = Queue()\nq.enqueue(\"A\")\nq.enqueue(\"B\")\nq.enqueue(\"C\")\nprint(q.front())    # A\nprint(q.dequeue())  # A\nprint(q.size())     # 2"
+    },
+    {
+      "language": "go",
+      "label": "Go",
+      "code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n  var queue []string\n\n  // Enqueue — O(1)\n  queue = append(queue, \"A\", \"B\", \"C\")\n\n  // Front — O(1)\n  fmt.Println(queue[0])  // A\n\n  // Dequeue — O(1)\n  front := queue[0]\n  queue = queue[1:]\n  fmt.Println(front)  // A\n\n  fmt.Println(len(queue))  // 2\n}"
+    }
+  ],
+  "problems": [
+    {
+      "id": "1",
+      "name": "Implement Queue using Stacks",
+      "difficulty": "Easy",
+      "url": "#"
+    },
+    {
+      "id": "2",
+      "name": "Number of Recent Calls",
+      "difficulty": "Easy",
+      "url": "#"
+    },
+    {
+      "id": "3",
+      "name": "Design Circular Queue",
+      "difficulty": "Medium",
+      "url": "#"
+    },
+    {
+      "id": "4",
+      "name": "Rotting Oranges",
+      "difficulty": "Medium",
+      "url": "#"
+    },
+    {
+      "id": "5",
+      "name": "Task Scheduler",
+      "difficulty": "Medium",
+      "url": "#"
+    },
+    {
+      "id": "6",
+      "name": "Sliding Window Maximum",
+      "difficulty": "Hard",
+      "url": "#"
+    }
+  ]
+}

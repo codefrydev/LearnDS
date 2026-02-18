@@ -1,0 +1,99 @@
+{
+  "slug": "graphs",
+  "theory": "A graph consists of a set of vertices (nodes) connected by edges. Graphs can be directed or undirected, weighted or unweighted, and cyclic or acyclic. They model complex relationships like social networks, road maps, and dependency systems. Key traversal algorithms include Depth-First Search (DFS) and Breadth-First Search (BFS), while pathfinding uses Dijkstra's and Bellman-Ford algorithms.",
+  "useCases": [
+    "Social network connections",
+    "Map routing and GPS navigation",
+    "Dependency resolution in build systems",
+    "Network topology and circuit analysis"
+  ],
+  "complexity": [
+    {
+      "operation": "Add Vertex",
+      "average": "O(1)",
+      "worst": "O(1)"
+    },
+    {
+      "operation": "Add Edge",
+      "average": "O(1)",
+      "worst": "O(1)"
+    },
+    {
+      "operation": "BFS / DFS",
+      "average": "O(V + E)",
+      "worst": "O(V + E)"
+    },
+    {
+      "operation": "Remove Vertex",
+      "average": "O(V + E)",
+      "worst": "O(V + E)"
+    }
+  ],
+  "spaceComplexity": "O(V + E)",
+  "codeExamples": [
+    {
+      "language": "javascript",
+      "label": "JavaScript",
+      "code": "class Graph {\n  constructor() {\n  this.adj = new Map();\n  }\n\n  addEdge(u, v) {\n  if (!this.adj.has(u)) this.adj.set(u, []);\n  if (!this.adj.has(v)) this.adj.set(v, []);\n  this.adj.get(u).push(v);\n  this.adj.get(v).push(u);\n  }\n\n  bfs(start) {\n  const visited = new Set([start]);\n  const queue = [start];\n  const order = [];\n  while (queue.length) {\n    const node = queue.shift();\n    order.push(node);\n    for (const nb of this.adj.get(node) ?? []) {\n      if (!visited.has(nb)) {\n        visited.add(nb);\n        queue.push(nb);\n      }\n    }\n  }\n  return order;\n  }\n}\n\nconst g = new Graph();\ng.addEdge(0, 1); g.addEdge(0, 2);\ng.addEdge(1, 3); g.addEdge(2, 4);\nconsole.log(g.bfs(0));  // [0, 1, 2, 3, 4]"
+    },
+    {
+      "language": "csharp",
+      "label": "C#",
+      "code": "using System.Collections.Generic;\n\nvar adj = new Dictionary<int, List<int>>();\n\nvoid AddEdge(int u, int v) {\n  if (!adj.ContainsKey(u)) adj[u] = new List<int>();\n  if (!adj.ContainsKey(v)) adj[v] = new List<int>();\n  adj[u].Add(v);\n  adj[v].Add(u);\n}\n\nList<int> Bfs(int start) {\n  var visited = new HashSet<int> { start };\n  var queue = new Queue<int>();\n  queue.Enqueue(start);\n  var order = new List<int>();\n  while (queue.Count > 0) {\n  int node = queue.Dequeue();\n  order.Add(node);\n  foreach (int nb in adj.GetValueOrDefault(node, new List<int>())) {\n    if (!visited.Contains(nb)) {\n      visited.Add(nb);\n      queue.Enqueue(nb);\n    }\n  }\n  }\n  return order;\n}\n\nAddEdge(0, 1); AddEdge(0, 2);\nAddEdge(1, 3); AddEdge(2, 4);\n// Bfs(0) => [0, 1, 2, 3, 4]"
+    },
+    {
+      "language": "python",
+      "label": "Python",
+      "code": "from collections import defaultdict, deque\n\nclass Graph:\n  def __init__(self):\n      self.adj = defaultdict(list)\n\n  def add_edge(self, u, v):\n      self.adj[u].append(v)\n      self.adj[v].append(u)  # undirected\n\n  def bfs(self, start):\n      visited = set([start])\n      queue = deque([start])\n      order = []\n      while queue:\n          node = queue.popleft()\n          order.append(node)\n          for neighbor in self.adj[node]:\n              if neighbor not in visited:\n                  visited.add(neighbor)\n                  queue.append(neighbor)\n      return order\n\n  def dfs(self, start, visited=None):\n      if visited is None:\n          visited = set()\n      visited.add(start)\n      print(start, end=\" \")\n      for neighbor in self.adj[start]:\n          if neighbor not in visited:\n              self.dfs(neighbor, visited)\n\ng = Graph()\ng.add_edge(0, 1)\ng.add_edge(0, 2)\ng.add_edge(1, 3)\ng.add_edge(2, 4)\nprint(g.bfs(0))  # [0, 1, 2, 3, 4]"
+    },
+    {
+      "language": "go",
+      "label": "Go",
+      "code": "package main\n\nimport \"fmt\"\n\nfunc bfs(adj map[int][]int, start int) []int {\n  visited := map[int]bool{start: true}\n  queue := []int{start}\n  var order []int\n  for len(queue) > 0 {\n      node := queue[0]\n      queue = queue[1:]\n      order = append(order, node)\n      for _, nb := range adj[node] {\n          if !visited[nb] {\n              visited[nb] = true\n              queue = append(queue, nb)\n          }\n      }\n  }\n  return order\n}\n\nfunc main() {\n  adj := make(map[int][]int)\n  adj[0] = []int{1, 2}\n  adj[1] = []int{0, 3}\n  adj[2] = []int{0, 4}\n  adj[3] = []int{1}\n  adj[4] = []int{2}\n  fmt.Println(bfs(adj, 0))  // [0 1 2 3 4]\n}"
+    }
+  ],
+  "problems": [
+    {
+      "id": "1",
+      "name": "Number of Islands",
+      "difficulty": "Medium",
+      "url": "#"
+    },
+    {
+      "id": "2",
+      "name": "Clone Graph",
+      "difficulty": "Medium",
+      "url": "#"
+    },
+    {
+      "id": "3",
+      "name": "Course Schedule",
+      "difficulty": "Medium",
+      "url": "#"
+    },
+    {
+      "id": "4",
+      "name": "Pacific Atlantic Water Flow",
+      "difficulty": "Medium",
+      "url": "#"
+    },
+    {
+      "id": "5",
+      "name": "Graph Valid Tree",
+      "difficulty": "Medium",
+      "url": "#"
+    },
+    {
+      "id": "6",
+      "name": "Word Ladder",
+      "difficulty": "Hard",
+      "url": "#"
+    },
+    {
+      "id": "7",
+      "name": "Alien Dictionary",
+      "difficulty": "Hard",
+      "url": "#"
+    }
+  ]
+}

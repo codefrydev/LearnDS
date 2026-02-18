@@ -5,6 +5,7 @@ import { Check, Copy } from "lucide-react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import type { CodeExample } from "@/lib/topic-content"
+import { uiStrings } from "@/lib/ui-strings"
 
 function CopyButton({ code }: { code: string }) {
   const [copied, setCopied] = useState(false)
@@ -21,7 +22,7 @@ function CopyButton({ code }: { code: string }) {
       size="icon"
       className="size-7 text-muted-foreground hover:text-foreground"
       onClick={handleCopy}
-      aria-label="Copy code"
+      aria-label={uiStrings.codeBlock.copyCode}
     >
       {copied ? <Check className="size-3.5" /> : <Copy className="size-3.5" />}
     </Button>
@@ -56,7 +57,7 @@ function highlightCode(code: string): React.ReactNode[] {
       // Function calls
       [/\b([a-zA-Z_]\w*)\s*\(/, "text-code-function"],
       // Numbers
-      [/\b(\d+\.?\d*)\b/, "text-amber-300"],
+      [/\b(\d+\.?\d*)\b/, "text-code-number"],
     ]
 
     if (remaining.trim() === "") {

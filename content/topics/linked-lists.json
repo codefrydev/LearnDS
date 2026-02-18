@@ -1,0 +1,99 @@
+{
+  "slug": "linked-lists",
+  "theory": "A linked list is a linear data structure where each element (node) contains data and a reference (pointer) to the next node. Unlike arrays, linked lists do not store elements in contiguous memory, which allows efficient insertion and deletion at any point without shifting elements. Common variants include singly linked, doubly linked, and circular linked lists.",
+  "useCases": [
+    "Dynamic memory allocation",
+    "Implementing stacks, queues, and deques",
+    "Undo functionality in applications",
+    "Polynomial arithmetic and sparse matrices"
+  ],
+  "complexity": [
+    {
+      "operation": "Access",
+      "average": "O(n)",
+      "worst": "O(n)"
+    },
+    {
+      "operation": "Search",
+      "average": "O(n)",
+      "worst": "O(n)"
+    },
+    {
+      "operation": "Insertion",
+      "average": "O(1)",
+      "worst": "O(1)"
+    },
+    {
+      "operation": "Deletion",
+      "average": "O(1)",
+      "worst": "O(1)"
+    }
+  ],
+  "spaceComplexity": "O(n)",
+  "codeExamples": [
+    {
+      "language": "javascript",
+      "label": "JavaScript",
+      "code": "class Node {\n  constructor(data) {\n  this.data = data;\n  this.next = null;\n  }\n}\n\nclass LinkedList {\n  constructor() { this.head = null; }\n\n  append(data) {\n  const node = new Node(data);\n  if (!this.head) { this.head = node; return; }\n  let curr = this.head;\n  while (curr.next) curr = curr.next;\n  curr.next = node;\n  }\n\n  prepend(data) {\n  const node = new Node(data);\n  node.next = this.head;\n  this.head = node;\n  }\n\n  delete(data) {\n  if (!this.head) return;\n  if (this.head.data === data) {\n    this.head = this.head.next;\n    return;\n  }\n  let curr = this.head;\n  while (curr.next && curr.next.data !== data) curr = curr.next;\n  if (curr.next) curr.next = curr.next.next;\n  }\n}\n\nconst ll = new LinkedList();\nll.append(1); ll.append(2); ll.append(3);\nll.prepend(0);\nconsole.log(ll);  // 0 -> 1 -> 2 -> 3"
+    },
+    {
+      "language": "csharp",
+      "label": "C#",
+      "code": "public class Node {\n  public int Data { get; set; }\n  public Node Next { get; set; }\n  public Node(int data) { Data = data; }\n}\n\npublic class LinkedList {\n  private Node head;\n\n  public void Append(int data) {\n  var node = new Node(data);\n  if (head == null) { head = node; return; }\n  var curr = head;\n  while (curr.Next != null) curr = curr.Next;\n  curr.Next = node;\n  }\n\n  public void Prepend(int data) {\n  var node = new Node(data) { Next = head };\n  head = node;\n  }\n\n  public void Delete(int data) {\n  if (head == null) return;\n  if (head.Data == data) { head = head.Next; return; }\n  var curr = head;\n  while (curr.Next != null && curr.Next.Data != data) curr = curr.Next;\n  if (curr.Next != null) curr.Next = curr.Next.Next;\n  }\n}"
+    },
+    {
+      "language": "python",
+      "label": "Python",
+      "code": "class Node:\n  def __init__(self, data):\n      self.data = data\n      self.next = None\n\nclass LinkedList:\n  def __init__(self):\n      self.head = None\n\n  def append(self, data):\n      new_node = Node(data)\n      if not self.head:\n          self.head = new_node\n          return\n      curr = self.head\n      while curr.next:\n          curr = curr.next\n      curr.next = new_node\n\n  def prepend(self, data):\n      new_node = Node(data)\n      new_node.next = self.head\n      self.head = new_node\n\n  def delete(self, data):\n      if not self.head:\n          return\n      if self.head.data == data:\n          self.head = self.head.next\n          return\n      curr = self.head\n      while curr.next and curr.next.data != data:\n          curr = curr.next\n      if curr.next:\n          curr.next = curr.next.next\n\n  def display(self):\n      nodes = []\n      curr = self.head\n      while curr:\n          nodes.append(str(curr.data))\n          curr = curr.next\n      print(\" -> \".join(nodes))\n\nll = LinkedList()\nll.append(1)\nll.append(2)\nll.append(3)\nll.prepend(0)\nll.display()  # 0 -> 1 -> 2 -> 3"
+    },
+    {
+      "language": "go",
+      "label": "Go",
+      "code": "package main\n\ntype Node struct {\n  data int\n  next *Node\n}\n\ntype LinkedList struct {\n  head *Node\n}\n\nfunc (l *LinkedList) Append(data int) {\n  node := &Node{data: data}\n  if l.head == nil { l.head = node; return }\n  curr := l.head\n  for curr.next != nil { curr = curr.next }\n  curr.next = node\n}\n\nfunc (l *LinkedList) Prepend(data int) {\n  node := &Node{data: data, next: l.head}\n  l.head = node\n}\n\nfunc (l *LinkedList) Delete(data int) {\n  if l.head == nil { return }\n  if l.head.data == data {\n      l.head = l.head.next\n      return\n  }\n  curr := l.head\n  for curr.next != nil && curr.next.data != data { curr = curr.next }\n  if curr.next != nil {\n      curr.next = curr.next.next\n  }\n}"
+    }
+  ],
+  "problems": [
+    {
+      "id": "1",
+      "name": "Reverse Linked List",
+      "difficulty": "Easy",
+      "url": "#"
+    },
+    {
+      "id": "2",
+      "name": "Merge Two Sorted Lists",
+      "difficulty": "Easy",
+      "url": "#"
+    },
+    {
+      "id": "3",
+      "name": "Linked List Cycle",
+      "difficulty": "Easy",
+      "url": "#"
+    },
+    {
+      "id": "4",
+      "name": "Remove Nth Node From End",
+      "difficulty": "Medium",
+      "url": "#"
+    },
+    {
+      "id": "5",
+      "name": "Add Two Numbers",
+      "difficulty": "Medium",
+      "url": "#"
+    },
+    {
+      "id": "6",
+      "name": "Reorder List",
+      "difficulty": "Medium",
+      "url": "#"
+    },
+    {
+      "id": "7",
+      "name": "Merge k Sorted Lists",
+      "difficulty": "Hard",
+      "url": "#"
+    }
+  ]
+}

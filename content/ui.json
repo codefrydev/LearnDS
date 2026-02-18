@@ -1,0 +1,47 @@
+{
+  "sections": {
+    "theory": "Theory",
+    "code": "Code",
+    "visualization": "Visualization",
+    "problems": "Problems",
+    "description": "Description"
+  },
+  "sectionTitles": {
+    "theoryAndDescription": "Theory & Description",
+    "codeExamples": "Code Examples",
+    "interactiveVisualization": "Interactive Visualization",
+    "practiceProblems": "Practice Problems",
+    "keyPoints": "Key Points",
+    "useCases": "Common Use Cases",
+    "complexityCheatSheet": "Complexity Cheat Sheet"
+  },
+  "difficulty": {
+    "Easy": "Easy",
+    "Medium": "Medium",
+    "Hard": "Hard"
+  },
+  "practice": {
+    "tableHeaders": {
+      "status": "Status",
+      "problem": "Problem",
+      "difficulty": "Difficulty",
+      "actions": "Actions"
+    },
+    "markComplete": "Mark as complete",
+    "practiceButton": "Practice",
+    "noProblems": "No problems for this topic yet."
+  },
+  "codeBlock": {
+    "copyCode": "Copy code"
+  },
+  "visualizationPlaceholder": {
+    "title": "Interactive Visualization",
+    "comingSoon": "Animation for \"{problemName}\" coming soon. Use the code editor to implement your solution."
+  },
+  "codeEditor": {
+    "loading": "Loading editor..."
+  },
+  "breadcrumb": {
+    "ariaLabel": "Breadcrumb"
+  }
+}

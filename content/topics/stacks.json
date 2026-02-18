@@ -1,0 +1,93 @@
+{
+  "slug": "stacks",
+  "theory": "A stack is a Last-In-First-Out (LIFO) data structure where elements are added and removed from the same end, called the top. Think of it like a stack of plates: you can only add or remove the top plate. Stacks are fundamental to function call management, expression evaluation, backtracking algorithms, and undo mechanisms in software.",
+  "useCases": [
+    "Function call stack and recursion",
+    "Expression evaluation and syntax parsing",
+    "Undo/Redo operations in editors",
+    "Browser back/forward navigation"
+  ],
+  "complexity": [
+    {
+      "operation": "Access",
+      "average": "O(n)",
+      "worst": "O(n)"
+    },
+    {
+      "operation": "Search",
+      "average": "O(n)",
+      "worst": "O(n)"
+    },
+    {
+      "operation": "Push",
+      "average": "O(1)",
+      "worst": "O(1)"
+    },
+    {
+      "operation": "Pop",
+      "average": "O(1)",
+      "worst": "O(1)"
+    }
+  ],
+  "spaceComplexity": "O(n)",
+  "codeExamples": [
+    {
+      "language": "javascript",
+      "label": "JavaScript",
+      "code": "// Stack using array\nconst stack = [];\n\n// Push — O(1)\nstack.push(10);\nstack.push(20);\nstack.push(30);\n\n// Peek — O(1)\nconsole.log(stack[stack.length - 1]);  // 30\n\n// Pop — O(1)\nconsole.log(stack.pop());  // 30\n\n// Size\nconsole.log(stack.length);  // 2"
+    },
+    {
+      "language": "csharp",
+      "label": "C#",
+      "code": "using System.Collections.Generic;\n\nvar stack = new Stack<int>();\n\n// Push — O(1)\nstack.Push(10);\nstack.Push(20);\nstack.Push(30);\n\n// Peek — O(1)\nConsole.WriteLine(stack.Peek());  // 30\n\n// Pop — O(1)\nConsole.WriteLine(stack.Pop());   // 30\n\n// Count\nConsole.WriteLine(stack.Count);   // 2"
+    },
+    {
+      "language": "python",
+      "label": "Python",
+      "code": "class Stack:\n  def __init__(self):\n      self.items = []\n\n  def push(self, item):\n      self.items.append(item)\n\n  def pop(self):\n      if self.is_empty():\n          raise IndexError(\"Stack is empty\")\n      return self.items.pop()\n\n  def peek(self):\n      if self.is_empty():\n          raise IndexError(\"Stack is empty\")\n      return self.items[-1]\n\n  def is_empty(self):\n      return len(self.items) == 0\n\n  def size(self):\n      return len(self.items)\n\n# Usage\nstack = Stack()\nstack.push(10)\nstack.push(20)\nstack.push(30)\nprint(stack.peek())  # 30\nprint(stack.pop())   # 30\nprint(stack.size())  # 2"
+    },
+    {
+      "language": "go",
+      "label": "Go",
+      "code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n  var stack []int\n\n  // Push — O(1)\n  stack = append(stack, 10, 20, 30)\n\n  // Peek — O(1)\n  fmt.Println(stack[len(stack)-1])  // 30\n\n  // Pop — O(1)\n  top := stack[len(stack)-1]\n  stack = stack[:len(stack)-1]\n  fmt.Println(top)  // 30\n\n  fmt.Println(len(stack))  // 2\n}"
+    }
+  ],
+  "problems": [
+    {
+      "id": "1",
+      "name": "Valid Parentheses",
+      "difficulty": "Easy",
+      "url": "#"
+    },
+    {
+      "id": "2",
+      "name": "Min Stack",
+      "difficulty": "Medium",
+      "url": "#"
+    },
+    {
+      "id": "3",
+      "name": "Evaluate Reverse Polish Notation",
+      "difficulty": "Medium",
+      "url": "#"
+    },
+    {
+      "id": "4",
+      "name": "Daily Temperatures",
+      "difficulty": "Medium",
+      "url": "#"
+    },
+    {
+      "id": "5",
+      "name": "Decode String",
+      "difficulty": "Medium",
+      "url": "#"
+    },
+    {
+      "id": "6",
+      "name": "Largest Rectangle in Histogram",
+      "difficulty": "Hard",
+      "url": "#"
+    }
+  ]
+}

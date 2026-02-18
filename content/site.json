@@ -1,0 +1,34 @@
+{
+  "name": "DSA Lab - Master Data Structures",
+  "shortName": "DSA Lab",
+  "description": "Learn data structures through interactive examples, code walkthroughs, and guided practice problems.",
+  "themeColor": "#1e2233",
+  "hero": {
+    "badge": "Interactive Learning Platform",
+    "headline": "Master Data Structures",
+    "subtitle": "Build a solid foundation in computer science through interactive visualizations, real code examples, and guided practice problems.",
+    "stats": [
+      { "label": "8 Topics", "colorKey": "topic1" },
+      { "label": "Code in 3 Languages", "colorKey": "topic3" },
+      { "label": "Practice Problems", "colorKey": "primary" }
+    ]
+  },
+  "nav": {
+    "home": "Home",
+    "appName": "DSA Lab",
+    "topics": "Topics",
+    "problems": "Problems"
+  },
+  "home": {
+    "allTopicsTitle": "All Topics",
+    "allTopicsDescription": "Choose a data structure to begin your deep dive.",
+    "problemsTitle": "Problems",
+    "problemsDescription": "Pick a topic to see problems and practice with code."
+  },
+  "problemsPage": {
+    "title": "Problems",
+    "description": "Practice problems by topic with code editor and visualization",
+    "heading": "Problems",
+    "subheading": "Pick a topic to see problems and practice with code and interactive visualization."
+  }
+}
